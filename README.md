@@ -1,0 +1,2 @@
+# VereinsfinanzManager
+VereinsfinanzManager - VfM

@@ -6,4 +6,5 @@ type Department struct {
 	DepartmentLeader string
 	DepartmentBudget float64
 	Category         Category
+	Teams          []string
 }

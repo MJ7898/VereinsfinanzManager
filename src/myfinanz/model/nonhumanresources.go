@@ -3,6 +3,7 @@ package model
 import "time"
 
 type NonHumanResources struct {
+	SchemaVersion string `bson:"schema_version,omitempty"`
 	// ContractID             int64     `bson:"contract_id,omitempty"`
 	Name         string       `bson:"name,omitempty"`
 	Cost         string       `bson:"cost,omitempty"`

@@ -3,6 +3,7 @@ package model
 import "time"
 
 type HumanResources struct {
+	SchemaVersion string `bson:"schema_version,omitempty"`
 	// ContractID             int64     `bson:"contract_id,omitempty"`
 	Name                   string    `bson:"player_name,omitempty"`
 	Value                  string    `bson:"value,omitempty"`

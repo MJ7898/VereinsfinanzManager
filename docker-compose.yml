@@ -1,0 +1,22 @@
+version: "0.1"
+services:
+  myfinanz:
+    build:
+      context: ./src
+      dockerfile: myfinanz/Dockerfile
+    ports:
+    - "8000:8000"
+    environment:
+      - DB_CONNECT=mongodb:27017
+      - LOG_LEVEL=info
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    environment:
+    - PUID=1000
+    - PGID=1000
+    #volumes:
+    #- /home/vfm/mongodb/database:/data/db
+    ports:
+    - 27017:27017
+    restart: unless-stopped

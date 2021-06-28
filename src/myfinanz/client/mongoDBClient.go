@@ -16,7 +16,7 @@ type Client struct {
 
 func GetMongoDBConnection(){
 	// "mongodb://localhost:27017"
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb+srv://VfMAdmin:VfMAdmin@cluster-vfm.xlagy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"))
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))//"mongodb+srv://VfMAdmin:VfMAdmin@cluster-vfm.xlagy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"))
 	if err != nil {
 		log.Fatal(err)
 	}

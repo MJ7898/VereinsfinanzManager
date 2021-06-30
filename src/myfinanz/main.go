@@ -28,8 +28,9 @@ func init() {
 	log.SetLevel(level)*/
 }
 func main() {
-	log.Infoln("Starting My-Aktion API server")
+	log.Infoln("test: 1, 2, 3 Starting My-Aktion API server")
 	router := mux.NewRouter()
+	log.Infoln("created new router via mux")
 	router.HandleFunc("/health", handler.Health).Methods("GET")
 	router.HandleFunc("/department", handler.CreateDepartment).Methods("POST")
 	router.HandleFunc("/departments", handler.GetDepartments).Methods("GET")

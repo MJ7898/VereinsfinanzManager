@@ -8,15 +8,48 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	_ "go.mongodb.org/mongo-driver/mongo/readpref"
+	"sync"
 	"time"
 )
 
-type Client struct {
 
+/* Used to create a singleton object of MongoDB client.
+Initialized and exposed through  GetMongoClient().*/
+var clientInstance *mongo.Client
+//Used during creation of singleton client object in GetMongoClient().
+var clientInstanceError error
+//Used to execute client creation procedure only once.
+var mongoOnce sync.Once
+//I have used below constants just to hold required database config's.
+
+
+func GetMongoClient() (*mongo.Client, error) {
+	//Perform connection creation operation only once.
+	mongoOnce.Do(func() {
+		// Set client options
+		clientOptions := options.Client().ApplyURI("mongodb://mongodb:27017")
+		// Connect to MongoDB
+		client, err := mongo.Connect(context.TODO(), clientOptions)
+		if err != nil {
+			clientInstanceError = err
+		}
+		// Check the connection
+		err = client.Ping(context.TODO(), nil); if err == nil { log.Infoln("Ping Successful")}
+		if err != nil {
+			clientInstanceError = err
+		}
+		clientInstance = client
+	})
+	return clientInstance, clientInstanceError
 }
 
 func GetMongoDBConnection() (mongo.Client,context.Context, error) {
-	// "mongodb://localhost:27017"
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+	if err != nil { return *client, ctx, err }
+
+	/* "mongodb://localhost:27017"
 	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))//"mongodb+srv://VfMAdmin:VfMAdmin@cluster-vfm.xlagy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"))
 	if err != nil {
 		log.Fatal(err)
@@ -25,7 +58,7 @@ func GetMongoDBConnection() (mongo.Client,context.Context, error) {
 	err = client.Connect(ctx)
 	if err != nil {
 		log.Fatal(err)
-	}
+	}*/
 	defer func(client *mongo.Client, ctx context.Context) {
 		err := client.Disconnect(ctx)
 		if err != nil {
@@ -46,11 +79,14 @@ func GetMongoDBConnection() (mongo.Client,context.Context, error) {
 	log.Fatalf("Successfully connected to MongoDB %v.", databases)*/
 }
 func CreateDepartmentDB(department model.Department) error {
-	client, ctx, err := GetMongoDBConnection()
-	res, err := client.Database("VfM").Collection("Department").InsertOne(ctx, department) //bson.M{"schema_version":&department.SchemaVersion, "name_of_department": &department.NameOfDepartment, "department_leader": &department.DepartmentLeader, "department_budget": &department.DepartmentBudget})
+	client, err := GetMongoClient()
+	//client, ctx, err := GetMongoDBConnection()
+	log.Infof("Error during getMongoClient: %v was thrown", err)
+	//log.Infof("Error: %v was thrown", ctx)
+	res, err := client.Database("VfM").Collection("Department").InsertOne(context.TODO(), department) //bson.M{"schema_version":&department.SchemaVersion, "name_of_department": &department.NameOfDepartment, "department_leader": &department.DepartmentLeader, "department_budget": &department.DepartmentBudget})
 	if err != nil {
-		log.Fatalf("Error: %v was thrown", err)
-		log.Fatalf("Connection isn`t up %v", res)
+		log.Infof("Error during insertOne: %v was thrown", err)
+		log.Infof("Connection isn`t up %v", res)
 		return err
 	}
 	entry := log.WithField("ID", department)

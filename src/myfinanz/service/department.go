@@ -9,7 +9,7 @@ import (
 func CreateDepartment(department *model.Department) error  {
 	result := client.CreateDepartmentDB(*department)
 	log.Printf("Successfully added department %v to DB", result)
-	return nil
+	return result
 }
 
 func GetDepartments() ([]model.Department, error)  {

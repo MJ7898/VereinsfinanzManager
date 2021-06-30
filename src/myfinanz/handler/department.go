@@ -31,7 +31,7 @@ func getDepartment(r *http.Request) (*model.Department, error)  {
 	if err != nil {
 		log.Errorf("Can't serialize request body to department struct: %v", err)
 		return nil, err
-	}
+	 }
 	log.Infof("Leaving getDepartment-Handler")
 	return &department, nil
 }

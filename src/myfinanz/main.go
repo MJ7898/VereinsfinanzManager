@@ -10,7 +10,12 @@ import (
 
 func init() {
 	// init database
-	defer client.GetMongoDBConnection()
+	defer func() {
+		_, _, err := client.GetMongoDBConnection()
+		if err != nil {
+			log.Fatalf("Connection to mongoDB refused")
+		}
+	}()
 	// init logger
 	/*log.SetFormatter(&log.TextFormatter{})
 	log.SetReportCaller(true)
@@ -36,6 +41,8 @@ func main() {
 	if err := http.ListenAndServe(":8000", router); err != nil {
 		log.Fatal(err)
 	}
+
+	log.Infof("Server runs on %v", router)
 
 	// client.GetMongoDBConnection()
 

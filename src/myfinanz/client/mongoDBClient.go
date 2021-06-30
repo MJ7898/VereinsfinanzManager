@@ -47,8 +47,7 @@ func GetMongoDBConnection() (mongo.Client,context.Context, error) {
 }
 func CreateDepartmentDB(department model.Department) error {
 	client, ctx, err := GetMongoDBConnection()
-
-	res, err := client.Database("VfM").Collection("Department").InsertOne(ctx, bson.A{department})
+	res, err := client.Database("VfM").Collection("Department").InsertOne(ctx, department) //bson.M{"schema_version":&department.SchemaVersion, "name_of_department": &department.NameOfDepartment, "department_leader": &department.DepartmentLeader, "department_budget": &department.DepartmentBudget})
 	if err != nil {
 		log.Fatalf("Error: %v was thrown", err)
 		log.Fatalf("Connection isn`t up %v", res)

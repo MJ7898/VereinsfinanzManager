@@ -9,19 +9,22 @@ import (
 )
 
 func CreateDepartment(w http.ResponseWriter, r *http.Request)  {
+	log.Infof("Entering createDepartment-Handler")
 	department, err := getDepartment(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
-	log.Infof("Department: %v", department)
+	log.Infof("Handler: Department: %v", department)
 	if err := service.CreateDepartment(department); err != nil {
 		log.Errorf("Error calling service CreateDepartment: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	log.Infof("Leave createDepartment-Handler")
 }
 
 func getDepartment(r *http.Request) (*model.Department, error)  {
+	log.Infof("Entering getDepartment-Handler")
 	var department model.Department
 	//ToDo: loh http body ad middleware
 	err := json.NewDecoder(r.Body).Decode(&department)
@@ -29,6 +32,7 @@ func getDepartment(r *http.Request) (*model.Department, error)  {
 		log.Errorf("Can't serialize request body to department struct: %v", err)
 		return nil, err
 	}
+	log.Infof("Leaving getDepartment-Handler")
 	return &department, nil
 }
 

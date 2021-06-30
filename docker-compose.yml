@@ -16,7 +16,7 @@ services:
     - PUID=1000
     - PGID=1000
     #volumes:
-    #- /home/vfm/mongodb/database:/data/db
+    #- /home/vfm/mongodb/database:/data/mongoDB
     ports:
     - 27017:27017
     restart: unless-stopped

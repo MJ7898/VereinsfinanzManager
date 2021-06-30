@@ -47,6 +47,7 @@ func GetDepartments(w http.ResponseWriter, _ *http.Request)  {
 	sendJson(w, departments)
 }
 
+// GetDepartment GetDepartment-Handler function to get an single department with id/**
 func GetDepartment(w http.ResponseWriter, r *http.Request)  {
 	id, err := getId(r)
 	if err != nil {
@@ -61,4 +62,49 @@ func GetDepartment(w http.ResponseWriter, r *http.Request)  {
 	}
 	sendJson(w, department)
 }
+
+func UpdateDepartment(w http.ResponseWriter, r *http.Request)  {
+	id, err := getId(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+	department, err := getDepartment(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	department, err = service.UpdateDepartment(id, department)
+	if err != nil {
+		log.Errorf("Failure updateing department with ID %v: %v", id, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if department == nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	sendJson(w, department)
+}
+
+func DeleteDepartment(w http.ResponseWriter, r *http.Request) {
+	id, err := getId(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	department, err := service.DeleteDepartment(id)
+
+	if err != nil {
+		log.Errorf("Failure updating department with ID %v: %v", id, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if department == nil {
+		http.Error(w, "404 department not found", http.StatusNotFound)
+		return
+	}
+	sendJson(w, result{Success: "Success (Ok)"})
+}
+
 //ToDo: Add Update and Delete Department...

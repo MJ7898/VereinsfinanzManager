@@ -95,6 +95,60 @@ func CreateDepartmentDB(department model.Department) error {
 	return err
 }
 
+func GetDepratmentWithIDFromDB(id string) ([]model.Department, error)  {
+	var getResult []model.Department
+	client, err := GetMongoClient()
+	if err != nil {
+		log.Errorf("Cannot Connect to DB: %v", err)
+	}
+	collection := client.Database("VfM").Collection("Department")
+
+	cur, errCon := collection.Find(context.TODO(), bson.M{"_id":id})
+	if errCon != nil {
+		return getResult, errCon
+	}
+	for cur.Next(context.TODO()) {
+		jsonRes := model.Department{}
+		err := cur.Decode(&jsonRes)
+		if err != nil {
+			return getResult, err
+		}
+		getResult = append(getResult, jsonRes)
+	}
+	cur.Close(context.TODO())
+	if len(getResult) == 0 {
+		return getResult, mongo.ErrNoDocuments
+	}
+	return getResult, nil
+}
+
+func GetDepartmentsFromDB() ([]model.Department, error) {
+	var getResult []model.Department
+	client, err := GetMongoClient()
+	if err != nil {
+		log.Errorf("Cannot Connect to DB: %v", err)
+	}
+	collection := client.Database("VfM").Collection("Department")
+
+	cur, errCon := collection.Find(context.TODO(), bson.M{})
+	if errCon != nil {
+		return getResult, errCon
+	}
+	for cur.Next(context.TODO()) {
+		jsonRes := model.Department{}
+		err := cur.Decode(&jsonRes)
+		if err != nil {
+			return getResult, err
+		}
+		getResult = append(getResult, jsonRes)
+	}
+	cur.Close(context.TODO())
+	if len(getResult) == 0 {
+		return getResult, mongo.ErrNoDocuments
+	}
+	return getResult, nil
+}
+
 func UpdateDepartmentDB()  {
 
 }
@@ -102,7 +156,7 @@ func UpdateDepartmentDB()  {
 
 func DeleteDepartmentDB(department model.Department) error {
 	// ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	client, ctx, error := GetMongoDBConnection()
+	/*client, ctx, error := GetMongoDBConnection()
 
 	res, err := client.Database("VfM").Collection("Department").DeleteOne(ctx, bson.M{"name_of_department": department.NameOfDepartment})
 	if err != nil {
@@ -112,6 +166,6 @@ func DeleteDepartmentDB(department model.Department) error {
 	}
 	entry := log.WithField("ID", department)
 	entry.Infof("Successfully deleted department: %v", department.NameOfDepartment)
-	log.Printf("Successfully deleted Department")
-	return err
+	log.Printf("Successfully deleted Department")*/
+	return nil
 }

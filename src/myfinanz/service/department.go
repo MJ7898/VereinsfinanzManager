@@ -13,12 +13,20 @@ func CreateDepartment(department *model.Department) error  {
 }
 
 func GetDepartments() ([]model.Department, error)  {
-	var departments []model.Department
+	// var departments []model.Department
+	departments, err := client.GetDepartmentsFromDB()
+	if err != nil {
+		log.Fatalf("No Documents was found after calling GetDepartments: %v", err)
+	}
 	return departments, nil
 }
 
-func GetDepartment(id uint)(*model.Department, error){
-	department := new(model.Department)
+func GetDepartment(id string)([]model.Department, error){
+	//department := new(model.Department)
+	department, err := client.GetDepratmentWithIDFromDB(id)
+	if err != nil {
+		log.Printf("Document with ID %V not found! LOG: %v", id, err)
+	}
 	return department, nil
 }
 
@@ -27,13 +35,13 @@ func UpdateDepartment(id uint, department *model.Department) (*model.Department,
 }
 
 func DeleteDepartment(id uint) (*model.Department, error)  {
-	department, err := GetDepartment(id)
+	/*department, err := GetDepartment(id)
 
 	if err == nil {
 		return department, nil
 	}
 	// client := client.GetMongoDBConnection
 	deleteDepartmentResult :=  client.DeleteDepartmentDB(*department) // mongoDB.DB.Delete(&department)
-	log.Printf("Successfully deleted department %v from DB", deleteDepartmentResult)
-	return department, nil
+	log.Printf("Successfully deleted department %v from DB", deleteDepartmentResult)*/
+	return nil, nil
 }

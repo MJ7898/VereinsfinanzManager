@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
+	"io"
 	"net/http"
 	"strconv"
 )
@@ -28,4 +29,11 @@ func getId(r *http.Request) (uint, error) {
 		return 0, err
 	}
 	return uint(id), nil
+}
+
+func getIdAsString(r *http.Request) (string, error)  {
+	if b, err := io.ReadAll(r.Body); err == nil {
+		return string(b), err
+	}
+	return "Can`t read string", nil
 }

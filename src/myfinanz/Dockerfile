@@ -1,6 +1,6 @@
 FROM golang:1.16-buster
 
-# copy code and protobuf
+# copy code
 WORKDIR /go/src/app
 COPY ./myfinanz .
 

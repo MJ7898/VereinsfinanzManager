@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/client"
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/model"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 )
 
@@ -21,7 +22,7 @@ func GetDepartments() ([]model.Department, error)  {
 	return departments, nil
 }
 
-func GetDepartment(id string)([]model.Department, error){
+func GetDepartment(id primitive.ObjectID)(model.Department, error){
 	//department := new(model.Department)
 	department, err := client.GetDepratmentWithIDFromDB(id)
 	if err != nil {
@@ -30,11 +31,11 @@ func GetDepartment(id string)([]model.Department, error){
 	return department, nil
 }
 
-func UpdateDepartment(id uint, department *model.Department) (*model.Department, error)  {
+func UpdateDepartment(id primitive.ObjectID, department *model.Department) (*model.Department, error)  {
 	return department, nil
 }
 
-func DeleteDepartment(id uint) (*model.Department, error)  {
+func DeleteDepartment(id primitive.ObjectID) (*model.Department, error)  {
 	/*department, err := GetDepartment(id)
 
 	if err == nil {

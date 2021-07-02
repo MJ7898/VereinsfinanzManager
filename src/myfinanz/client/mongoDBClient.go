@@ -5,6 +5,7 @@ import (
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/model"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	_ "go.mongodb.org/mongo-driver/mongo/readpref"
@@ -95,7 +96,7 @@ func CreateDepartmentDB(department model.Department) error {
 	return err
 }
 
-func GetDepratmentWithIDFromDB(id string) ([]model.Department, error)  {
+ /*func GetDepratmentWithIDFromDB(id string, objectID string) ([]model.Department, error)  {
 	var getResult []model.Department
 	client, err := GetMongoClient()
 	if err != nil {
@@ -103,7 +104,18 @@ func GetDepratmentWithIDFromDB(id string) ([]model.Department, error)  {
 	}
 	collection := client.Database("VfM").Collection("Department")
 
-	cur, errCon := collection.Find(context.TODO(), bson.M{"_id":id})
+	var departmentFilter []model.Department
+	var bSonFilter []byte
+	cur, err := collection.Find(context.TODO(), bson.M{"ID":id}json.Unmarshal(bSonFilter, &departmentFilter ))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var departmentsFiltered []model.Department
+	if err = cur.All(context.TODO(), &departmentsFiltered); err != nil{
+		log.Fatal(err)
+	}
+	log.Printf("Document with _id: %v was found", cur)
 	if errCon != nil {
 		return getResult, errCon
 	}
@@ -113,13 +125,36 @@ func GetDepratmentWithIDFromDB(id string) ([]model.Department, error)  {
 		if err != nil {
 			return getResult, err
 		}
+		log.Printf("Cursor found Document with _id: %v and append it to the result Array", cur)
 		getResult = append(getResult, jsonRes)
 	}
 	cur.Close(context.TODO())
 	if len(getResult) == 0 {
+		log.Printf("Eorror: Cursor is null and has no Content from _id: %v", getResult)
 		return getResult, mongo.ErrNoDocuments
 	}
-	return getResult, nil
+	return departmentsFiltered, nil
+}*/
+
+// GetDepratmentWithIDFromDB  GetIssuesByCode - Get All issues for collection
+func GetDepratmentWithIDFromDB(id primitive.ObjectID) (model.Department, error)  {
+		result := model.Department{}
+		//Define filter query for fetching specific document from collection
+		filter := bson.D{primitive.E{Key: "_id", Value: id}}
+		//Get MongoDB connection using connectionhelper.
+		client, err := GetMongoClient()
+		if err != nil {
+			return result, err
+		}
+		//Create a handle to the respective collection in the database.
+		collection := client.Database("VfM").Collection("Department")
+		//Perform FindOne operation & validate against the error.
+		err = collection.FindOne(context.TODO(), filter).Decode(&result)
+		if err != nil {
+			return result, err
+		}
+		//Return result without any error.
+		return result, nil
 }
 
 func GetDepartmentsFromDB() ([]model.Department, error) {

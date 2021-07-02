@@ -53,18 +53,15 @@ func GetDepartments(w http.ResponseWriter, _ *http.Request)  {
 
 // GetDepartment GetDepartment-Handler function to get an single department with id/**
 func GetDepartment(w http.ResponseWriter, r *http.Request)  {
-	id, err := getIdAsString(r)
+	id, err := getId(r)
+	// var objectResult primitive.ObjectID = id
 	if err != nil {
 		log.Errorf("Error calling servie Get(Single)Department: %v", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	department, err := service.GetDepartment(id)
-	if department == nil {
-		http.Error(w,"404 Department not found", http.StatusNotFound)
-		return
-	}
+	department, _ := service.GetDepartment(id)
 	sendJson(w, department)
 }
 

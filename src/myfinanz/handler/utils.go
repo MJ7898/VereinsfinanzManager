@@ -4,9 +4,8 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
-	"io"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
-	"strconv"
 )
 
 type result struct {
@@ -21,19 +20,11 @@ func sendJson(w http.ResponseWriter, value interface{}) {
 	}
 }
 
-func getId(r *http.Request) (uint, error) {
+func getId(r *http.Request) (primitive.ObjectID, error)  {
 	vars := mux.Vars(r)
-	id, err := strconv.ParseUint(vars["id"], 10, 0)
-	if err != nil {
-		log.Errorf("Can't get ID from request: %v", err)
-		return 0, err
-	}
-	return uint(id), nil
-}
 
-func getIdAsString(r *http.Request) (string, error)  {
-	if b, err := io.ReadAll(r.Body); err == nil {
-		return string(b), err
-	}
-	return "Can`t read string", nil
+	objID, err := primitive.ObjectIDFromHex(vars["id"])
+	if err != nil {
+		log.Errorf("cast ist going wrong %v, STRING: %v", err)}
+	return objID, nil
 }

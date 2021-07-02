@@ -32,6 +32,8 @@ func GetDepartment(id primitive.ObjectID)(model.Department, error){
 }
 
 func UpdateDepartment(id primitive.ObjectID, department *model.Department) (*model.Department, error)  {
+	newDepartment, _ := client.UpdateDepartmentFromDB(id, department)
+	log.Printf("Output of New Department: %v", newDepartment)
 	return department, nil
 }
 

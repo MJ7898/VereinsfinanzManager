@@ -157,18 +157,23 @@ func UpdateDepartmentFromDB(id primitive.ObjectID, department *model.Department)
 	return model.Department{}, nil
 }
 
-func DeleteDepartmentDB(department model.Department) error {
-	// ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	/*client, ctx, error := GetMongoDBConnection()
+func DeleteDepartmentDB(id primitive.ObjectID,) (model.Department, error) {
+	result := model.Department{}
+	//Define filter query for fetching specific document from collection
+	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 
-	res, err := client.Database("VfM").Collection("Department").DeleteOne(ctx, bson.M{"name_of_department": department.NameOfDepartment})
+	client, err := GetMongoClient()
+
+	res, errCon := client.Database("VfM").
+		Collection("Department").
+		DeleteOne(context.TODO(), filter)
 	if err != nil {
-		log.Fatalf("Error: %v was thrown", error)
+		log.Fatalf("Error: %v was thrown", errCon)
 		log.Fatalf("Connection isn`t up %v", res)
-		return err
+		return model.Department{}, nil
 	}
-	entry := log.WithField("ID", department)
-	entry.Infof("Successfully deleted department: %v", department.NameOfDepartment)
-	log.Printf("Successfully deleted Department")*/
-	return nil
+	entry := log.WithField("ID", result)
+	entry.Infof("Successfully deleted department: %v With ID: %v", result, id)
+	log.Printf("Successfully deleted Department")
+	return result, nil
 }

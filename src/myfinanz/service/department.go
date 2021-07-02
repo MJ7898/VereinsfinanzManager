@@ -38,13 +38,11 @@ func UpdateDepartment(id primitive.ObjectID, department *model.Department) (*mod
 }
 
 func DeleteDepartment(id primitive.ObjectID) (*model.Department, error)  {
-	/*department, err := GetDepartment(id)
-
-	if err == nil {
-		return department, nil
-	}
 	// client := client.GetMongoDBConnection
-	deleteDepartmentResult :=  client.DeleteDepartmentDB(*department) // mongoDB.DB.Delete(&department)
-	log.Printf("Successfully deleted department %v from DB", deleteDepartmentResult)*/
+	deleteDepartmentResult, err :=  client.DeleteDepartmentDB(id)
+	if err != nil {
+		log.Fatalf("Error %v was thorwn", err)
+	}
+	log.Printf("Successfully deleted department %v from DB", deleteDepartmentResult)
 	return nil, nil
 }

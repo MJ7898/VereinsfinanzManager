@@ -108,5 +108,3 @@ func DeleteDepartment(w http.ResponseWriter, r *http.Request) {
 	}
 	sendJson(w, result{Success: "Success (Ok)"})
 }
-
-//ToDo: Add Update and Delete Department...

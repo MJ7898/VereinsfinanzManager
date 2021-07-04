@@ -1,13 +1,19 @@
 package model
 
-import "time"
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
+)
 
 type NonHumanResources struct {
-	SchemaVersion string `bson:"schema_version,omitempty"`
+	SchemaVersion string `json:"schema_version" bson:"schema_version,omitempty"`
+	Key string `json:"key,omitempty"`
+	ID     primitive.ObjectID  `bson:"_id,omitempty"`
 	// ContractID             int64     `bson:"contract_id,omitempty"`
-	Name         string       `bson:"name,omitempty"`
-	Cost         string       `bson:"cost,omitempty"`
-	Validity     string       `bson:"validity,omitempty"`
-	TimeStamp    time.Time    `bson:"time_stamp,omitempty"`
-	ResourceType ResourceType `bson:"resource_type,omitempty"`
+	Name         string       `json:"name" bson:"name,omitempty"`
+	Cost         string       `json:"cost" bson:"cost,omitempty"`
+	Validity     string       `json:"validity" bson:"validity,omitempty"`
+	TimeStamp    time.Time    `json:"time_stamp" bson:"time_stamp,omitempty"`
+	ResourceType ResourceType `json:"resource_type" bson:"resource_type,omitempty"`
+	TeamID primitive.ObjectID `json:"team_id"`
 }

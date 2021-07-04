@@ -9,6 +9,7 @@ type Department struct {
 	NameOfDepartment string `bson:"name_of_department" json:"name_of_department"`
 	DepartmentLeader string `bson:"department_leader" json:"department_leader"`
 	DepartmentBudget string `bson:"department_budget" json:"department_budget"`
+	DepartmentCost   float64 `json:"department_cost" bson:"department_cost"`
 	//Teams            []Team   `bson:"teams_id,omitempty"`
 	// Teams []string `bson:"teams_id,omitempty"`
 }

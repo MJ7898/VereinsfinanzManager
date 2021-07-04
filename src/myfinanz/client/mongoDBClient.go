@@ -2,6 +2,8 @@ package client
 
 import (
 	"context"
+	"sync"
+
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/model"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
@@ -9,17 +11,18 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	_ "go.mongodb.org/mongo-driver/mongo/readpref"
-	"sync"
-	"time"
 )
 
 /* Used to create a singleton object of MongoDB client.
 Initialized and exposed through  GetMongoClient().*/
 var clientInstance *mongo.Client
+
 //Used during creation of singleton client object in GetMongoClient().
 var clientInstanceError error
+
 //Used to execute client creation procedure only once.
 var mongoOnce sync.Once
+
 //I have used below constants just to hold required database config's.
 
 func GetMongoClient() (*mongo.Client, error) {
@@ -33,27 +36,16 @@ func GetMongoClient() (*mongo.Client, error) {
 			clientInstanceError = err
 		}
 		// Check the connection
-		err = client.Ping(context.TODO(), nil); if err == nil { log.Infoln("Ping Successful")}
+		err = client.Ping(context.TODO(), nil)
+		if err == nil {
+			log.Infoln("Ping Successful")
+		}
 		if err != nil {
 			clientInstanceError = err
 		}
 		clientInstance = client
 	})
 	return clientInstance, clientInstanceError
-}
-
-func GetMongoDBConnection() (mongo.Client,context.Context, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
-	defer cancel()
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
-	if err != nil { return *client, ctx, err }
-	defer func(client *mongo.Client, ctx context.Context) {
-		err := client.Disconnect(ctx)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}(client, ctx)
-	return *client, ctx, nil
 }
 
 func CreateDepartmentDB(department model.Department) error {
@@ -74,27 +66,28 @@ func CreateDepartmentDB(department model.Department) error {
 }
 
 // GetDepratmentWithIDFromDB  GetIssuesByCode - Get All issues for collection
-func GetDepratmentWithIDFromDB(id primitive.ObjectID) (model.Department, error)  {
-		result := model.Department{}
-		//Define filter query for fetching specific document from collection
-		filter := bson.D{primitive.E{Key: "_id", Value: id}}
-		//Get MongoDB connection using connectionhelper.
-		client, err := GetMongoClient()
-		if err != nil {
-			return result, err
-		}
-		//Create a handle to the respective collection in the database.
-		collection := client.Database("VfM").Collection("Department")
-		//Perform FindOne operation & validate against the error.
-		err = collection.FindOne(context.TODO(), filter).Decode(&result)
-		if err != nil {
-			return result, err
-		}
-		//Return result without any error.
-		return result, nil
+func GetDepratmentWithIDFromDB(id primitive.ObjectID) (model.Department, error) {
+	result := model.Department{}
+	//Define filter query for fetching specific document from collection
+	filter := bson.D{primitive.E{Key: "_id", Value: id}}
+	//Get MongoDB connection using connectionhelper.
+	client, err := GetMongoClient()
+	if err != nil {
+		return result, err
+	}
+	//Create a handle to the respective collection in the database.
+	collection := client.Database("VfM").Collection("Department")
+	//Perform FindOne operation & validate against the error.
+	err = collection.FindOne(context.TODO(), filter).Decode(&result)
+	if err != nil {
+		return result, err
+	}
+	//Return result without any error.
+	return result, nil
 }
 
 func GetDepartmentsFromDB() ([]model.Department, error) {
+	log.Printf("Entering GetDepartments Client")
 	var getResult []model.Department
 	client, err := GetMongoClient()
 	if err != nil {
@@ -118,19 +111,20 @@ func GetDepartmentsFromDB() ([]model.Department, error) {
 	if len(getResult) == 0 {
 		return getResult, mongo.ErrNoDocuments
 	}
+	log.Printf("Leaving GetDepartments Client")
 	return getResult, nil
 }
 
-func UpdateDepartmentFromDB(id primitive.ObjectID, department *model.Department) (model.Department, error)  {
+func UpdateDepartmentFromDB(id primitive.ObjectID, department *model.Department) (model.Department, error) {
 	result := model.Department{}
 	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 	//Define updater for to specifiy change to be updated.
 	updater := bson.D{primitive.E{Key: "$set", Value: bson.M{
-			"schema_version": department.SchemaVersion,
-			"name_of_department": department.NameOfDepartment,
-			"department_leader": department.DepartmentLeader,
-			"department_budget": department.DepartmentBudget,
+		"schema_version":     department.SchemaVersion,
+		"name_of_department": department.NameOfDepartment,
+		"department_leader":  department.DepartmentLeader,
+		"department_budget":  department.DepartmentBudget,
 	}}}
 	log.Printf("Result from UPDATER: %v", updater)
 
@@ -157,17 +151,17 @@ func UpdateDepartmentFromDB(id primitive.ObjectID, department *model.Department)
 	return model.Department{}, nil
 }
 
-func DeleteDepartmentDB(id primitive.ObjectID,) (model.Department, error) {
+func DeleteDepartmentDB(id primitive.ObjectID) (model.Department, error) {
 	result := model.Department{}
 	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 
-	client, err := GetMongoClient()
+	client, errCon := GetMongoClient()
 
 	res, errCon := client.Database("VfM").
 		Collection("Department").
 		DeleteOne(context.TODO(), filter)
-	if err != nil {
+	if errCon != nil {
 		log.Fatalf("Error: %v was thrown", errCon)
 		log.Fatalf("Connection isn`t up %v", res)
 		return model.Department{}, nil

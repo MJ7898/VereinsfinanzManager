@@ -1,13 +1,19 @@
 package model
 
-import "time"
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
+)
 
 type HumanResources struct {
-	SchemaVersion string `bson:"schema_version,omitempty"`
+	SchemaVersion string `json:"schema_version" bson:"schema_version,omitempty"`
+	Key string `json:"key,omitempty"`
+	ID     primitive.ObjectID  `bson:"_id,omitempty"`
 	// ContractID             int64     `bson:"contract_id,omitempty"`
-	Name                   string    `bson:"player_name,omitempty"`
-	Value                  string    `bson:"value,omitempty"`
-	Salary                 string    `bson:"salary,omitempty"`
-	ContractRuntime        time.Time `bson:"contract_runtime,omitempty"`
-	ContractRuntimeInYears float32   `bson:"contract_runtime_in_years,omitempty"`
+	Name                   string    `json:"name" bson:"player_name,omitempty"`
+	Value                  string    `json:"value" bson:"value,omitempty"`
+	Salary                 string    `json:"salary" bson:"salary,omitempty"`
+	ContractRuntime        time.Time `json:"contract_runtime" bson:"contract_runtime,omitempty"`
+	// ContractRuntimeInYears float32   `json:"contract_runtime_in_years" bson:"contract_runtime_in_years,omitempty"`
+	TeamID primitive.ObjectID `json:"team_id"`
 }

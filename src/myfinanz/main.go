@@ -32,25 +32,29 @@ func main() {
 	router := mux.NewRouter()
 	log.Infoln("created new router via mux")
 	router.HandleFunc("/health", handler.Health).Methods("GET")
+
 	router.HandleFunc("/department", handler.CreateDepartment).Methods("POST")
 	router.HandleFunc("/departments", handler.GetDepartments).Methods("GET")
 	router.HandleFunc("/departments/{id}", handler.GetDepartment).Methods("GET")
 	router.HandleFunc("/departments/{id}", handler.UpdateDepartment).Methods("PUT")
 	router.HandleFunc("/departments/{id}", handler.DeleteDepartment).Methods("DELETE")
+
+	router.HandleFunc("/team", handler.CreateTeam).Methods("POST")
+	router.HandleFunc("/teams", handler.GetTeams).Methods("GET")
+	router.HandleFunc("/teams/{id}", handler.GetTeam).Methods("GET")
+	router.HandleFunc("/teams/{id}", handler.UpdateTeam).Methods("PUT")
+	router.HandleFunc("/teams/{id}", handler.DeleteTeam).Methods("DELETE")
 	// router.HandleFunc("/campaigns/{id}/donation", handler.AddDonation).Methods("POST")
-	// go monitortransactions()
+
 	if err := http.ListenAndServe(":8000", router); err != nil {
 		log.Fatal(err)
 	}
-
 	log.Infof("Server runs on %v", router)
 
 	// client.GetMongoDBConnection()
-
 	// collection := client.Database("VfM").Collection("club")
 	// res, err := collection.InsertOne(ctx, bson.D{{"club_name", "FC Hackentrick"}, {"club_leader", "Juergen Klopp"}, {"budget", 15000000000}, {"address", "Klosterweg 13, 56789 Heide"}, {"description", "Club Heide for fun and fitness"}, {"departments", bson.A{"Fussball", "Handball", "Tennis", "Golf", "Schwimmen", "Eishockey"}}})
 	//id := res.InsertedID
-
 	// fmt.Printf("Successfully inserted %v\n", res)
 }
 

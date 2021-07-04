@@ -29,7 +29,7 @@ func GetMongoClient() (*mongo.Client, error) {
 	//Perform connection creation operation only once.
 	mongoOnce.Do(func() {
 		// Set client options
-		clientOptions := options.Client().ApplyURI("mongodb://mongodb:27017")
+		clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
 		// Connect to MongoDB
 		client, err := mongo.Connect(context.TODO(), clientOptions)
 		if err != nil {
@@ -117,6 +117,11 @@ func GetDepartmentsFromDB() ([]model.Department, error) {
 
 func UpdateDepartmentFromDB(id primitive.ObjectID, department *model.Department) (model.Department, error) {
 	result := model.Department{}
+
+	oldTeams, _ := GetDepratmentWithIDFromDB(id)
+	newTeams := oldTeams.Teams
+	newTeams = append(newTeams, department.Teams...)
+
 	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 	//Define updater for to specifiy change to be updated.
@@ -125,6 +130,7 @@ func UpdateDepartmentFromDB(id primitive.ObjectID, department *model.Department)
 		"name_of_department": department.NameOfDepartment,
 		"department_leader":  department.DepartmentLeader,
 		"department_budget":  department.DepartmentBudget,
+		"teams_id":           newTeams,
 	}}}
 	log.Printf("Result from UPDATER: %v", updater)
 

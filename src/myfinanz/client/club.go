@@ -143,6 +143,32 @@ func DeleteClubDB(id primitive.ObjectID) (model.Club, error) {
 
 	client, errCon := GetMongoClient()
 
+	teamsFromDB, err := GetTeamsFromDB()
+	if err != nil {
+		return model.Club{}, err
+	}
+	departmentsFromDB, err := GetDepartmentsFromDB()
+	if err != nil {
+		return model.Club{}, err
+	}
+
+	for j := 0; j < len(departmentsFromDB); j++ {
+		if departmentsFromDB[j].ID == id {
+			if teamsFromDB[j].ID == departmentsFromDB[j].ID {
+				deleteAllTeams, err := client.Database("VfM").Collection("Team").DeleteMany(context.TODO(), bson.M{"_id": departmentsFromDB[j].ID})
+				if err != nil {
+					return model.Club{}, err
+				}
+				log.Printf("Successfully deleted Collection Department: %v", deleteAllTeams)
+			}
+			deleteAllDepartments, err := client.Database("VfM").Collection("Department").DeleteMany(context.TODO(), bson.M{"_id":id})
+			if err != nil {
+				return model.Club{}, err
+			}
+			log.Printf("Successfully deleted Collection Department: %v", deleteAllDepartments)
+		}
+	}
+
 	res, errCon := client.Database("VfM").
 		Collection("Club").
 		DeleteOne(context.TODO(), filter)
@@ -154,5 +180,6 @@ func DeleteClubDB(id primitive.ObjectID) (model.Club, error) {
 	entry := log.WithField("ID", result)
 	entry.Infof("Successfully deleted club: %v With ID: %v", result, id)
 	log.Printf("Successfully deleted Club")
+
 	return result, nil
 }

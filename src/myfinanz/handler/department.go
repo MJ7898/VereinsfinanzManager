@@ -111,3 +111,24 @@ func DeleteDepartment(w http.ResponseWriter, r *http.Request) {
 	}
 	sendJson(w, result{Success: "Success (Ok)"})
 }
+
+func AddTeamWithDepartment(w http.ResponseWriter, r *http.Request) {
+	departmentID, err := getId(r)
+	if err != nil {
+		log.Errorf("Error getting ID: %v", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	team, err := getTeam(r)
+	if err != nil {
+		log.Errorf("Can't serialize body")
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	err = service.AddTeamWithDepartment(departmentID, team)
+	if err != nil {
+		log.Errorf("Handler: Add was not successfull")
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+}

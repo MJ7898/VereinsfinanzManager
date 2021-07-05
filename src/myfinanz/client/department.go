@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/model"
+	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/mongoDB"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -25,11 +26,12 @@ var mongoOnce sync.Once
 
 // TODO remove this function here and use ist in the mongoDB package
 
+/*
 func GetMongoClient() (*mongo.Client, error) {
 	//Perform connection creation operation only once.
 	mongoOnce.Do(func() {
 		// Set client options
-		clientOptions := options.Client().ApplyURI("mongodb://mongodb:27017")
+		clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
 		// Connect to MongoDB
 		client, err := mongo.Connect(context.TODO(), clientOptions)
 		if err != nil {
@@ -46,10 +48,10 @@ func GetMongoClient() (*mongo.Client, error) {
 		clientInstance = client
 	})
 	return clientInstance, clientInstanceError
-}
+}*/
 
 func CreateDepartmentDB(department model.Department) error {
-	client, err := GetMongoClient()
+	client, err := mongoDB.GetMongoClient()
 	//client, ctx, err := GetMongoDBConnection()
 	log.Infof("Error during getMongoClient: %v was thrown", err)
 	//log.Infof("Error: %v was thrown", ctx)
@@ -71,7 +73,7 @@ func GetDepratmentWithIDFromDB(id primitive.ObjectID) (model.Department, error) 
 	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 	//Get MongoDB connection using connectionhelper.
-	client, err := GetMongoClient()
+	client, err := mongoDB.GetMongoClient()
 	if err != nil {
 		return result, err
 	}
@@ -89,7 +91,7 @@ func GetDepratmentWithIDFromDB(id primitive.ObjectID) (model.Department, error) 
 func GetDepartmentsFromDB() ([]model.Department, error) {
 	log.Printf("Entering GetDepartments Client")
 	var getResult []model.Department
-	client, err := GetMongoClient()
+	client, err := mongoDB.GetMongoClient()
 	if err != nil {
 		log.Errorf("Cannot Connect to DB: %v", err)
 	}
@@ -142,7 +144,7 @@ func UpdateDepartmentFromDB(id primitive.ObjectID, department *model.Department)
 	log.Printf("Result from UPDATER: %v", updater)
 
 	//Get MongoDB connection using connectionhelper.
-	client, err := GetMongoClient()
+	client, err := mongoDB.GetMongoClient()
 	if err != nil {
 		return result, err
 	}
@@ -169,7 +171,7 @@ func DeleteDepartmentDB(id primitive.ObjectID) (model.Department, error) {
 	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 
-	client, errCon := GetMongoClient()
+	client, errCon := mongoDB.GetMongoClient()
 
 	res, errCon := client.Database("VfM").
 		Collection("Department").
@@ -183,4 +185,51 @@ func DeleteDepartmentDB(id primitive.ObjectID) (model.Department, error) {
 	entry.Infof("Successfully deleted department: %v With ID: %v", result, id)
 	log.Printf("Successfully deleted Department")
 	return result, nil
+}
+
+func UpdateCosts(insertedTeam *mongo.InsertOneResult, team *model.Team, departmentID primitive.ObjectID) error {
+	log.Infof("ENTERING UpdateDepartment-Client")
+
+	result, err := GetDepratmentWithIDFromDB(departmentID)
+	if err != nil {
+		return err
+	}
+
+	oid, _ := insertedTeam.InsertedID.(primitive.ObjectID)
+	log.Printf("Team ID : %v", oid)
+	result.Teams = append(result.Teams, oid)
+	log.Printf("Team ID Array: %v", result.Teams)
+
+	log.Printf("Team Costs old: %v", result.DepartmentCost)
+	result.DepartmentCost += team.SumCosts
+	log.Printf("Team Costs new: %v", result.DepartmentCost)
+
+	updater := bson.D{primitive.E{Key: "$set", Value: bson.M{
+		"schema_version":     result.SchemaVersion,
+		"name_of_department": result.NameOfDepartment,
+		"department_leader":  result.DepartmentLeader,
+		"department_budget":  result.DepartmentBudget,
+		"teams_id":           result.Teams,
+		"department_cost":    result.DepartmentCost,
+	}}}
+
+	log.Printf("Result from UPDATER: %v", updater)
+
+	client, err := mongoDB.GetMongoClient()
+	if err != nil {
+		return err
+	}
+	//Create a handle to the respective collection in the database.
+	collection := client.Database("VfM").Collection("Department")
+	//Perform UpdateOne operation & validate against the error.
+	filterClub := bson.D{primitive.E{Key: "_id", Value: result.ID}}
+	updatedClub, err := collection.UpdateOne(context.TODO(), filterClub, updater)
+	log.Printf("Updated Document as follow: %v", updatedClub)
+
+	if err != nil {
+		return err
+	}
+	//Return result without any error.
+	log.Infof("Leaving UpdateDepartment-Client")
+	return nil
 }

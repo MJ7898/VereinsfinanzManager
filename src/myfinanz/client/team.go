@@ -2,15 +2,17 @@ package client
 
 import (
 	"context"
+
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/model"
+	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/mongoDB"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func CreateTeamDB(team model.Team) error {
-	client, err := GetMongoClient()
+func CreateTeamDB(team model.Team) (*mongo.InsertOneResult, error) {
+	client, err := mongoDB.GetMongoClient()
 	//client, ctx, err := GetMongoDBConnection()
 	log.Infof("Error during getMongoClient: %v was thrown", err)
 	//log.Infof("Error: %v was thrown", ctx)
@@ -18,21 +20,21 @@ func CreateTeamDB(team model.Team) error {
 	if err != nil {
 		log.Infof("Error during insertOne: %v was thrown", err)
 		log.Infof("Connection isn`t up %v", res)
-		return err
+		return res, err
 	}
 	entry := log.WithField("ID", team)
 	entry.Infof("Successfully added team: %v", res)
 	log.Printf("Successfully added Team")
-	return err
+	return res, err
 }
 
 // GetTeamWithIDFromDB GetDepratmentWithIDFromDB  GetIssuesByCode - Get All issues for collection
-func GetTeamWithIDFromDB(id primitive.ObjectID) (model.Team, error)  {
+func GetTeamWithIDFromDB(id primitive.ObjectID) (model.Team, error) {
 	result := model.Team{}
 	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 	//Get MongoDB connection using connectionhelper.
-	client, err := GetMongoClient()
+	client, err := mongoDB.GetMongoClient()
 	if err != nil {
 		return result, err
 	}
@@ -49,7 +51,7 @@ func GetTeamWithIDFromDB(id primitive.ObjectID) (model.Team, error)  {
 
 func GetTeamsFromDB() ([]model.Team, error) {
 	var getResult []model.Team
-	client, err := GetMongoClient()
+	client, err := mongoDB.GetMongoClient()
 	if err != nil {
 		log.Errorf("Cannot Connect to DB: %v", err)
 	}
@@ -74,7 +76,7 @@ func GetTeamsFromDB() ([]model.Team, error) {
 	return getResult, nil
 }
 
-func UpdateTeamFromDB(id primitive.ObjectID, team *model.Team) (model.Team, error)  {
+func UpdateTeamFromDB(id primitive.ObjectID, team *model.Team) (model.Team, error) {
 	result := model.Team{}
 	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
@@ -88,7 +90,7 @@ func UpdateTeamFromDB(id primitive.ObjectID, team *model.Team) (model.Team, erro
 	log.Printf("Result from UPDATER: %v", updater)
 
 	//Get MongoDB connection using connectionhelper.
-	client, err := GetMongoClient()
+	client, err := mongoDB.GetMongoClient()
 	if err != nil {
 		return result, err
 	}
@@ -110,12 +112,12 @@ func UpdateTeamFromDB(id primitive.ObjectID, team *model.Team) (model.Team, erro
 	return model.Team{}, nil
 }
 
-func DeleteTeamDB(id primitive.ObjectID,) (model.Team, error) {
+func DeleteTeamDB(id primitive.ObjectID) (model.Team, error) {
 	result := model.Team{}
 	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 
-	client, err := GetMongoClient()
+	client, err := mongoDB.GetMongoClient()
 
 	res, errCon := client.Database("VfM").
 		Collection("Team").

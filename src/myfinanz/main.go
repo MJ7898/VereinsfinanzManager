@@ -38,6 +38,7 @@ func main() {
 	router.HandleFunc("/departments/{id}", handler.GetDepartment).Methods("GET")
 	router.HandleFunc("/departments/{id}", handler.UpdateDepartment).Methods("PUT")
 	router.HandleFunc("/departments/{id}", handler.DeleteDepartment).Methods("DELETE")
+	router.HandleFunc("/departments/{id}/team", handler.AddTeamWithDepartment).Methods("POST")
 
 	// teams
 	router.HandleFunc("/team", handler.CreateTeam).Methods("POST")

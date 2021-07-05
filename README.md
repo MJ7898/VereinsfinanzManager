@@ -67,7 +67,8 @@ Ein Go-Backend Projekt im Rahmen der Vorlesung Backend-Entwicklung im Studiengan
   "schema_version": "1",
   "name_of_team": "Rhein-Neckar Löwen 1",
   "team_leader": "Markus Strobel",
-  "team_budget": 2550000
+  "team_budget": 2550000,
+  "overall_costs": 1000
 }
 ```
 ```json
@@ -75,7 +76,8 @@ Ein Go-Backend Projekt im Rahmen der Vorlesung Backend-Entwicklung im Studiengan
   "schema_version": "1",
   "name_of_team": "Rhein-Neckar Löwen 2",
   "team_leader": "Martin Schwalb",
-  "team_budget": 1550000
+  "team_budget": 1550000,
+  "overall_costs": 1000
 }
 ```
 ```json
@@ -83,7 +85,8 @@ Ein Go-Backend Projekt im Rahmen der Vorlesung Backend-Entwicklung im Studiengan
   "schema_version": "1",
   "name_of_team": "Rhein-Neckar Löwen 3",
   "team_leader": "Roland Mächtel",
-  "team_budget": 500000
+  "team_budget": 500000,
+  "overall_costs": 1000
 }
 ```
 ### Fussball Teams
@@ -92,7 +95,8 @@ Ein Go-Backend Projekt im Rahmen der Vorlesung Backend-Entwicklung im Studiengan
   "schema_version": "1",
   "name_of_team": "Rhein-Neckar Kickers 1",
   "team_leader": "Joachim Löw",
-  "team_budget": 6500000
+  "team_budget": 6500000,
+  "overall_costs": 1000
 }
 ```
 ```json
@@ -100,7 +104,8 @@ Ein Go-Backend Projekt im Rahmen der Vorlesung Backend-Entwicklung im Studiengan
   "schema_version": "1",
   "name_of_team": "Rhein-Neckar Kickers 2",
   "team_leader": "Thomas Tuchel",
-  "team_budget": 2500000
+  "team_budget": 2500000,
+  "overall_costs": 1000
 }
 ```
 ```json
@@ -108,7 +113,8 @@ Ein Go-Backend Projekt im Rahmen der Vorlesung Backend-Entwicklung im Studiengan
   "schema_version": "1",
   "name_of_team": "Rhein-Neckar Kickers 3",
   "team_leader": "Pep Guardiola",
-  "team_budget": 1000000
+  "team_budget": 1000000,
+  "overall_costs": 1000
 }
 ```
 ## The current json of our non / human resources are as following 

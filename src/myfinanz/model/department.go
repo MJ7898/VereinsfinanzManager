@@ -11,5 +11,5 @@ type Department struct {
 	DepartmentBudget float64             `bson:"department_budget" json:"department_budget"`
 	DepartmentCost   float64            `json:"department_cost" bson:"department_cost"`
 	//Teams            []Team   `bson:"teams_id,omitempty"`
-	Teams []string `json:"teams_id" bson:"teams_id,omitempty"`
+	Teams []primitive.ObjectID  `json:"teams_id" bson:"teams_id,omitempty"`
 }

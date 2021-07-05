@@ -51,3 +51,9 @@ func DeleteDepartment(id primitive.ObjectID) (*model.Department, error) {
 	log.Printf("successfully deleted Department and updated Club: %v", updateClub)
 	return nil, nil
 }
+
+func AddTeamWithDepartment(departmentID primitive.ObjectID, team *model.Team) error {
+	result, error := client.CreateTeamDB(*team)
+	error = client.UpdateCosts(result, team, departmentID)
+	return error
+}

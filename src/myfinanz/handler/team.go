@@ -2,20 +2,21 @@ package handler
 
 import (
 	"encoding/json"
+	"net/http"
+
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/model"
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/service"
 	log "github.com/sirupsen/logrus"
-	"net/http"
 )
 
-func CreateTeam(w http.ResponseWriter, r *http.Request)  {
+func CreateTeam(w http.ResponseWriter, r *http.Request) {
 	log.Infof("Entering createTeam-Handler")
 	team, err := getTeam(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 	log.Infof("Handler: Team: %v", team)
-	if err := service.CreateTeam(team); err != nil {
+	if _, err := service.CreateTeam(team); err != nil {
 		log.Errorf("Error calling service CreateTeam: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -23,7 +24,7 @@ func CreateTeam(w http.ResponseWriter, r *http.Request)  {
 	log.Infof("Leave createTeam-Handler")
 }
 
-func getTeam(r *http.Request) (*model.Team, error)  {
+func getTeam(r *http.Request) (*model.Team, error) {
 	log.Infof("Entering getDepartment-Handler")
 	var team model.Team
 	//ToDo: loh http body ad middleware
@@ -36,7 +37,7 @@ func getTeam(r *http.Request) (*model.Team, error)  {
 	return &team, nil
 }
 
-func GetTeams(w http.ResponseWriter, _ *http.Request)  {
+func GetTeams(w http.ResponseWriter, _ *http.Request) {
 	teams, err := service.GetTeams()
 	if err != nil {
 		log.Errorf("Error calling service GetTeams: %v", err)
@@ -44,7 +45,7 @@ func GetTeams(w http.ResponseWriter, _ *http.Request)  {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	if err := json. NewEncoder(w).Encode(teams); err != nil {
+	if err := json.NewEncoder(w).Encode(teams); err != nil {
 		log.Errorf("Failure encoding value to JSON: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -52,7 +53,7 @@ func GetTeams(w http.ResponseWriter, _ *http.Request)  {
 }
 
 // GetTeam GetTeam-Handler function to get an single department with id/**
-func GetTeam(w http.ResponseWriter, r *http.Request)  {
+func GetTeam(w http.ResponseWriter, r *http.Request) {
 	id, err := getId(r)
 	// var objectResult primitive.ObjectID = id
 	if err != nil {
@@ -65,7 +66,7 @@ func GetTeam(w http.ResponseWriter, r *http.Request)  {
 	sendJson(w, team)
 }
 
-func UpdateTeam(w http.ResponseWriter, r *http.Request)  {
+func UpdateTeam(w http.ResponseWriter, r *http.Request) {
 	id, err := getId(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

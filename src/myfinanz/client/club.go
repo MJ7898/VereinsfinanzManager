@@ -13,7 +13,7 @@ import (
 )
 
 func CreateClubDB(club model.Club) error {
-	client, err := GetMongoClient()
+	client, err := mongoDB.GetMongoClient()
 	//client, ctx, err := GetMongoDBConnection()
 	log.Infof("Client: Error during getMongoClient: %v was thrown", err)
 	//log.Infof("Error: %v was thrown", ctx)
@@ -36,7 +36,7 @@ func GetClubWithIDFromDB(id primitive.ObjectID) (model.Club, error) {
 	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 	//Get MongoDB connection using connectionhelper.
-	client, err := GetMongoClient()
+	client, err := mongoDB.GetMongoClient()
 	if err != nil {
 		return result, err
 	}
@@ -53,7 +53,7 @@ func GetClubWithIDFromDB(id primitive.ObjectID) (model.Club, error) {
 
 func GetClubsFromDB() ([]model.Club, error) {
 	var getResult []model.Club
-	client, err := GetMongoClient()
+	client, err := mongoDB.GetMongoClient()
 	if err != nil {
 		log.Errorf("Cannot Connect to DB: %v", err)
 	}
@@ -112,7 +112,7 @@ func UpdateClubFromDB(id primitive.ObjectID, club *model.Club) (model.Club, erro
 	log.Printf("Result from UPDATER: %v", updater)
 
 	//Get MongoDB connection using connectionhelper.
-	client, err := GetMongoClient()
+	client, err := mongoDB.GetMongoClient()
 	if err != nil {
 		return result, err
 	}
@@ -181,7 +181,7 @@ func DeleteClubDB(id primitive.ObjectID) (model.Club, error) {
 	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 
-	client, errCon := GetMongoClient()
+	client, errCon := mongoDB.GetMongoClient()
 
 	teamsFromDB, err := GetTeamsFromDB()
 	if err != nil {

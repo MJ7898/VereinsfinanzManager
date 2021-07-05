@@ -15,9 +15,9 @@ Ein Go-Backend Projekt im Rahmen der Vorlesung Backend-Entwicklung im Studiengan
     {
       "owner_name": "Karl-Heinz Rummenigge",
       "name_of_bank": "Bank xyz",
-      "iban": "DE123456765432345678",
-      "departments_id": []
-    }
+      "iban": "DE123456765432345678"
+    },
+  "departments_id": []
 }
 ````
 

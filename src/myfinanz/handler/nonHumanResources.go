@@ -93,30 +93,30 @@ func AddNHR(w http.ResponseWriter, r *http.Request)  {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	hrDon, err := getNHRDon(r)
+	nhrDon, err := getNHRDon(r)
 	if err != nil {
 		log. Errorf("Can't serialize body")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	// TODO: if the hrDon doesn't exist, return 404 - don't show FK error
-	err = service.AddNHRDon(teamId, hrDon)
+	// TODO: if the nhrDon doesn't exist, return 404 - don't show FK error
+	err = service.AddNHRDon(teamId, nhrDon)
 	if err != nil {
-		log.Errorf("Failure adding nhr to team with ID %v: %v", hrDon, err)
+		log.Errorf("Failure adding nhr to team with ID %v: %v", nhrDon, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	sendJson(w, hrDon)
+	sendJson(w, nhrDon)
 }
 
-func getNHRDon(r *http.Request) (*model.HumanResources, error) {
-	var donation model.HumanResources
-	err := json.NewDecoder(r.Body).Decode(&donation)
+func getNHRDon(r *http.Request) (*model.NonHumanResources, error) {
+	var nhr model.NonHumanResources
+	err := json.NewDecoder(r.Body).Decode(&nhr)
 	if err != nil {
 		log.Errorf("Can't serialize request body to nhr struct: %v", err)
 		return nil, err
 	}
-	return &donation, nil
+	return &nhr, nil
 }
 

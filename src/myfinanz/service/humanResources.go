@@ -40,3 +40,15 @@ func DeleteHR(id primitive.ObjectID) (*model.HumanResources, error)  {
 	return nil, nil
 }
 
+func AddHRDon(id primitive.ObjectID, hrDon *model.HumanResources) error  {
+	team, err := GetTeam(id)
+	if err != nil {
+		return err
+	}
+
+	// team.ID := teamId
+	result, _ := client.UpdateHRDBWithTeamDependency(hrDon, team.ID)
+	log.Printf("Successfully added human ressource and put there the team id: %v", result)
+	return nil
+}
+

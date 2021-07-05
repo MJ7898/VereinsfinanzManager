@@ -85,3 +85,37 @@ func DeleteHR(w http.ResponseWriter, r *http.Request) {
 	}
 	sendJson(w, result{Success: "Success (Ok)"})
 }
+
+func AddHR(w http.ResponseWriter, r *http.Request)  {
+	teamId, err := getId(r)
+	if err != nil {
+		log.Errorf("Error getting ID: %v", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	hrDon, err := getHRDon(r)
+	if err != nil {
+		log. Errorf("Can't serialize body")
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// TODO: if the hrDon doesn't exist, return 404 - don't show FK error
+	err = service.AddHRDon(teamId, hrDon)
+	if err != nil {
+		log.Errorf("Failure adding hr to team with ID %v: %v", hrDon, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	sendJson(w, hrDon)
+}
+
+func getHRDon(r *http.Request) (*model.HumanResources, error) {
+	var hr model.HumanResources
+	err := json.NewDecoder(r.Body).Decode(&hr)
+	if err != nil {
+		log.Errorf("Can't serialize request body to hr struct: %v", err)
+		return nil, err
+	}
+	return &hr, nil
+}

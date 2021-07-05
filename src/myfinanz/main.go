@@ -45,6 +45,8 @@ func main() {
 	router.HandleFunc("/teams/{id}", handler.GetTeam).Methods("GET")
 	router.HandleFunc("/teams/{id}", handler.UpdateTeam).Methods("PUT")
 	router.HandleFunc("/teams/{id}", handler.DeleteTeam).Methods("DELETE")
+	router.HandleFunc("/teams/{id}/hr", handler.AddHR).Methods("POST")
+	router.HandleFunc("/campaigns/{id}/nhr", handler.AddNHR).Methods("POST")
 
 	// HR
 	router.HandleFunc("/hr", handler.CreateHR).Methods("POST")

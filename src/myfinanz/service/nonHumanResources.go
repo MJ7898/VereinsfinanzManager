@@ -39,3 +39,15 @@ func DeleteNHR(id primitive.ObjectID) (*model.NonHumanResources, error)  {
 	log.Printf("Successfully deleted nhr %v from DB", deleteNHRResult)
 	return nil, nil
 }
+
+func AddNHRDon(id primitive.ObjectID, nhrDon *model.NonHumanResources) error  {
+	team, err := GetTeam(id)
+	if err != nil {
+		return err
+	}
+
+	// team.ID := teamId
+	result, _ := client.UpdateNHRDBWithTeamDependency(nhrDon, team.ID)
+	log.Printf("Successfully added human ressource and put there the team id: %v", result)
+	return nil
+}

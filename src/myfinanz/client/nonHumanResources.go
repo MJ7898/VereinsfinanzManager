@@ -95,3 +95,41 @@ func DeleteNHRDB(id primitive.ObjectID,) (model.NonHumanResources, error) {
 	log.Printf("Successfully deleted NonHumanResource")
 	return result, nil
 }
+
+func UpdateNHRDBWithTeamDependency(nhr *model.NonHumanResources, teamID primitive.ObjectID) (model.NonHumanResources, error) {
+	result := model.NonHumanResources{}
+	//Define filter query for fetching specific document from collection
+	filter := bson.D{primitive.E{Key: "_id", Value: nhr.ID}}
+	//Define updater for to specifiy change to be updated.
+	updater := bson.D{primitive.E{Key: "$set", Value: bson.M{
+		"schema_version":    nhr.SchemaVersion,
+		"player_name": nhr.Name,
+		"validity":  nhr.Validity,
+		"cost": nhr.Cost,
+		"duration": nhr.TimeStamp,
+		"team_id": teamID,
+	}}}
+	log.Printf("Result from UPDATER: %v", updater)
+
+	//Get MongoDB connection using connectionhelper.
+	client, err := GetMongoClient()
+	if err != nil {
+		return result, err
+	}
+	//Create a handle to the respective collection in the database.
+	collection := client.Database("VfM").Collection("NHR")
+	//Perform FindOne operation & validate against the error.
+	err = collection.FindOne(context.TODO(), filter).Decode(&result)
+
+	if err != nil {
+		return result, err
+	}
+	updatedDocu, err := collection.UpdateOne(context.TODO(), filter, updater)
+	log.Printf("Updated Document as follow: %v", updatedDocu)
+
+	if err != nil {
+		return result, nil
+	}
+	//Return result without any error.
+	return model.NonHumanResources{}, nil
+}

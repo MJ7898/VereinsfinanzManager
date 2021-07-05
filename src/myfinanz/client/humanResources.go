@@ -95,3 +95,41 @@ func DeleteHRDB(id primitive.ObjectID,) (model.HumanResources, error) {
 	log.Printf("Successfully deleted HumanResource")
 	return result, nil
 }
+
+func UpdateHRDBWithTeamDependency(hr *model.HumanResources, teamID primitive.ObjectID) (model.HumanResources, error) {
+	result := model.HumanResources{}
+	//Define filter query for fetching specific document from collection
+	filter := bson.D{primitive.E{Key: "_id", Value: hr.ID}}
+	//Define updater for to specifiy change to be updated.
+	updater := bson.D{primitive.E{Key: "$set", Value: bson.M{
+		"schema_version":     hr.SchemaVersion,
+		"player_name": hr.Name,
+		"value":  hr.Value,
+		"salary": hr.Salary,
+		"contract_runtime": hr.ContractRuntime,
+		"team_id": teamID,
+	}}}
+	log.Printf("Result from UPDATER: %v", updater)
+
+	//Get MongoDB connection using connectionhelper.
+	client, err := GetMongoClient()
+	if err != nil {
+		return result, err
+	}
+	//Create a handle to the respective collection in the database.
+	collection := client.Database("VfM").Collection("HR")
+	//Perform FindOne operation & validate against the error.
+	err = collection.FindOne(context.TODO(), filter).Decode(&result)
+
+	if err != nil {
+		return result, err
+	}
+	updatedDocu, err := collection.UpdateOne(context.TODO(), filter, updater)
+	log.Printf("Updated Document as follow: %v", updatedDocu)
+
+	if err != nil {
+		return result, nil
+	}
+	//Return result without any error.
+	return model.HumanResources{}, nil
+}

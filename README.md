@@ -45,7 +45,7 @@ Ein Go-Backend Projekt im Rahmen der Vorlesung Backend-Entwicklung im Studiengan
   "teams_id": []
 }
 ````
-### Schimmen
+### Schwimmen
 ````json
 {
   "schema_version": "1",
@@ -57,7 +57,7 @@ Ein Go-Backend Projekt im Rahmen der Vorlesung Backend-Entwicklung im Studiengan
 }
 ````
 
-## The currnet json of our Teams are as following
+## The current json of our Teams are as following
 
 ### Handball Teams
 ```json
@@ -109,6 +109,30 @@ Ein Go-Backend Projekt im Rahmen der Vorlesung Backend-Entwicklung im Studiengan
   "team_budget": 1000000
 }
 ```
+## The current json of our non / human resources are as following 
+### Human Resources
+````json
+{
+  "schema_version": "1",
+  "player_name,omitempty": "Kai Havertz",
+  "value": 9000000,
+  "salary": 5000000,
+  "contract_runtime": "2 years",
+  "team_id": ""
+}
+````
+
+### Non Human Resources 
+````json
+{
+  "schema_version": "1",
+  "player_name,omitempty": "Lizenzgebühr 1. Liga",
+  "cost": 1500000,
+  "validity": "Gültig bis 2022",
+  "duration": "2 years",
+  "team_id": ""
+}
+````
 
 The Presentation of the Project is available on Google Drive: 
 ###### https://docs.google.com/presentation/d/1xUGWtlGYvSkyTbJNTZdRMbv3pCi4z6LUkTdBgEv8BuQ/edit?usp=sharing 

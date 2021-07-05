@@ -13,6 +13,8 @@ Ein Go-Backend Projekt im Rahmen der Vorlesung Backend-Entwicklung im Studiengan
   "description": "Der regionale Club mit vielen Möglichkeiten und einer tollen Atmosphäre. Insights you can play on.",
   "bank_account": 
     {
+      "schema_version": "1",
+      "bank_account_id": 1,
       "owner_name": "Karl-Heinz Rummenigge",
       "name_of_bank": "Bank xyz",
       "iban": "DE123456765432345678"

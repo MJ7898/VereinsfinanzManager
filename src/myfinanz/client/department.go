@@ -115,44 +115,19 @@ func GetDepartmentsFromDB() ([]model.Department, error) {
 	return getResult, nil
 }
 
-func remove(s []string, id primitive.ObjectID) []string {
-	for i := 0; i < len(s); i++ {
-		if id.String() == s[i] {
-			s[len(s)-1], s[i] = s[i], s[len(s)-1]
+func remove(s []primitive.ObjectID, id primitive.ObjectID) []primitive.ObjectID {
+	for i := 0; i <= len(s); i++ {
+		if id == s[i] {
+			s[i] = s[len(s)-1]
+			s[len(s)-1] = primitive.ObjectID{}
 			return s[:len(s)-1]
 		}
 	}
-	// s[len(s)-1], s[i] = s[i], s[len(s)-1]
-	return s[:len(s)-1]
+	return s
 }
-
 
 func UpdateDepartmentFromDB(id primitive.ObjectID, department *model.Department) (model.Department, error) {
 	result := model.Department{}
-
-	//oldTeams, _ := GetDepratmentWithIDFromDB(id)
-	//newTeams := oldTeams.Teams
-
-	// getTeamsFromDB, err := GetTeamsFromDB()
-	// wholeTeams := len(getTeamsFromDB)
-
-	/*log.Printf("Teams-Length in Department-Document Storagae is actually as following: %v", len(newTeams))
-	log.Printf("Teams-length ist actually as following: %v", wholeTeams)
-	if wholeTeams >= len(newTeams) {
-		log.Printf("WHOLETEAMS IS BIGGER THAN NEWTEAMS. ==========>>> Starting iterate by 0 from %v", wholeTeams)
-		if err := recover(); err != nil {
-			return result, nil
-		}
-		for i := 0; i <= wholeTeams; i++ {
-			log.Printf("Existing Teams from Collection: %v AND Team from Department-Collection: %v", getTeamsFromDB[i].ID.String(), newTeams[i])
-			if getTeamsFromDB[i].ID.String() != newTeams[i] {
-				newTeams := append(newTeams, getTeamsFromDB[i].ID.String())
-				log.Printf("Successfully updated Teams: %v in Department-Document", newTeams)
-			}
-		}
-	} else {*/
-		//newTeams = append(newTeams, department.Teams...) //remove(newTeams, id)
-	//}
 
 	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}

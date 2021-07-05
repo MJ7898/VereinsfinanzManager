@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/mongoDB"
 
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/model"
 	log "github.com/sirupsen/logrus"
@@ -29,7 +30,7 @@ func CreateClubDB(club model.Club) error {
 	return err
 }
 
-// GetDepratmentWithIDFromDB  GetIssuesByCode - Get All issues for collection
+// GetClubWithIDFromDB  GetIssuesByCode - Get All issues for collection
 func GetClubWithIDFromDB(id primitive.ObjectID) (model.Club, error) {
 	result := model.Club{}
 	//Define filter query for fetching specific document from collection
@@ -105,7 +106,6 @@ func UpdateClubFromDB(id primitive.ObjectID, club *model.Club) (model.Club, erro
 		"address":        club.Address,
 		"description":    club.Description,
 		"bank_account":   bankAccount,
-		//"departments_id": club.Departments,
 		"departments_id": newDepartments,
 	}}}
 
@@ -136,12 +136,78 @@ func UpdateClubFromDB(id primitive.ObjectID, club *model.Club) (model.Club, erro
 	return model.Club{}, nil
 }
 
+func UpdateClubFromDBRemove(id primitive.ObjectID) (model.Club, error) {
+	log.Infof("ENTERING UpdateClub-Client")
+	result := model.Club{}
+
+	client, err := mongoDB.GetMongoClient()
+	collection := client.Database("VfM").Collection("Club")
+
+	filter := bson.M{"departments_id": id}
+	err = collection.FindOne(context.TODO(), filter).Decode(&result)
+	if err != nil {
+		return result, err
+	}
+
+	newDepartments := remove(result.Departments, id)
+
+	updater := bson.D{primitive.E{Key: "$set", Value: bson.M{
+		"schema_version": result.SchemaVersion,
+		"club_name":      result.ClubName,
+		"club_leader":    result.ClubLeader,
+		"budget":         result.Budget,
+		"address":        result.Address,
+		"description":    result.Description,
+		"bank_account":   result.BankAccount,
+		"departments_id": newDepartments,
+	}}}
+
+	log.Printf("Result from UPDATER: %v", updater)
+
+	filterClub := bson.D{primitive.E{Key: "_id", Value: result.ID}}
+	updatedClub, err := collection.UpdateOne(context.TODO(), filterClub, updater)
+	log.Printf("Updated Document as follow: %v", updatedClub)
+
+	if err != nil {
+		return result, nil
+	}
+	//Return result without any error.
+	log.Infof("Leaving UpdateClub-Client")
+	return model.Club{}, nil
+}
+
 func DeleteClubDB(id primitive.ObjectID) (model.Club, error) {
 	result := model.Club{}
 	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 
 	client, errCon := GetMongoClient()
+
+	teamsFromDB, err := GetTeamsFromDB()
+	if err != nil {
+		return model.Club{}, err
+	}
+	departmentsFromDB, err := GetDepartmentsFromDB()
+	if err != nil {
+		return model.Club{}, err
+	}
+
+	for j := 0; j < len(departmentsFromDB); j++ {
+		if departmentsFromDB[j].ID == id {
+			if teamsFromDB[j].ID == departmentsFromDB[j].ID {
+				deleteAllTeams, err := client.Database("VfM").Collection("Team").DeleteMany(context.TODO(), bson.M{"_id": departmentsFromDB[j].ID})
+				if err != nil {
+					return model.Club{}, err
+				}
+				log.Printf("Successfully deleted Collection Department: %v", deleteAllTeams)
+			}
+			deleteAllDepartments, err := client.Database("VfM").Collection("Department").DeleteMany(context.TODO(), bson.M{"_id":id})
+			if err != nil {
+				return model.Club{}, err
+			}
+			log.Printf("Successfully deleted Collection Department: %v", deleteAllDepartments)
+		}
+	}
 
 	res, errCon := client.Database("VfM").
 		Collection("Club").
@@ -154,5 +220,6 @@ func DeleteClubDB(id primitive.ObjectID) (model.Club, error) {
 	entry := log.WithField("ID", result)
 	entry.Infof("Successfully deleted club: %v With ID: %v", result, id)
 	log.Printf("Successfully deleted Club")
+
 	return result, nil
 }

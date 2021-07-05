@@ -1,6 +1,7 @@
 package model
 
 import "time"
+// TODO: Use the Account Model for the Authentification- and Authorisation-Prozess and
 
 type Account struct {
 	SchemaVersion string    `bson:"schema_version,omitempty"`

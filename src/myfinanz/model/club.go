@@ -11,6 +11,6 @@ type Club struct {
 	Budget        float64            `bson:"budget,omitempty" json:"budget"`
 	Address       string             `bson:"address,omitempty" json:"address"`
 	Description   string             `bson:"description,omitempty" json:"description"`
-	Departments   []string           `bson:"departments_id,omitempty" json:"departments_id"`
+	Departments   []primitive.ObjectID           `bson:"departments_id,omitempty" json:"departments_id"`
 	BankAccount   BankAccount        `bson:"bank_account,omitempty" json:"bank_account"`
 }

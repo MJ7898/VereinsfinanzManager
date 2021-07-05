@@ -25,6 +25,13 @@ func main() {
 	log.Infoln("created new router via mux")
 	router.HandleFunc("/health", handler.Health).Methods("GET")
 
+	// clubs
+	router.HandleFunc("/club", handler.CreateClub).Methods("POST")
+	router.HandleFunc("/clubs", handler.GetClubs).Methods("GET")
+	router.HandleFunc("/clubs/{id}", handler.GetClub).Methods("GET")
+	router.HandleFunc("/clubs/{id}", handler.UpdateClub).Methods("PUT")
+	router.HandleFunc("/clubs/{id}", handler.DeleteClub).Methods("DELETE")
+
 	// departments
 	router.HandleFunc("/department", handler.CreateDepartment).Methods("POST")
 	router.HandleFunc("/departments", handler.GetDepartments).Methods("GET")
@@ -38,13 +45,20 @@ func main() {
 	router.HandleFunc("/teams/{id}", handler.GetTeam).Methods("GET")
 	router.HandleFunc("/teams/{id}", handler.UpdateTeam).Methods("PUT")
 	router.HandleFunc("/teams/{id}", handler.DeleteTeam).Methods("DELETE")
+	router.HandleFunc("/teams/{id}/hr", handler.AddHR).Methods("POST")
+	router.HandleFunc("/teams/{id}/nhr", handler.AddNHR).Methods("POST")
 
-	// clubs
-	router.HandleFunc("/club", handler.CreateClub).Methods("POST")
-	router.HandleFunc("/clubs", handler.GetClubs).Methods("GET")
-	router.HandleFunc("/clubs/{id}", handler.GetClub).Methods("GET")
-	router.HandleFunc("/clubs/{id}", handler.UpdateClub).Methods("PUT")
-	router.HandleFunc("/clubs/{id}", handler.DeleteClub).Methods("DELETE")
+	// HR
+	//router.HandleFunc("/hr", handler.CreateHR).Methods("POST")
+	router.HandleFunc("/hrs", handler.GetHRS).Methods("GET")
+	router.HandleFunc("/hrs/{id}", handler.GetHR).Methods("GET")
+	router.HandleFunc("/hrs/{id}", handler.DeleteHR).Methods("DELETE")
+
+	// NHR
+	//router.HandleFunc("/nhr", handler.CreateNHR).Methods("POST")
+	router.HandleFunc("/nhrs", handler.GetNHRS).Methods("GET")
+	router.HandleFunc("/nhrs/{id}", handler.GetNHR).Methods("GET")
+	router.HandleFunc("/nhrs/{id}", handler.DeleteNHR).Methods("DELETE")
 
 	if err := http.ListenAndServe(":8000", router); err != nil {
 		log.Fatal(err)

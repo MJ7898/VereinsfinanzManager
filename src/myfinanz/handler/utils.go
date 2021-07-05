@@ -25,6 +25,6 @@ func getId(r *http.Request) (primitive.ObjectID, error)  {
 
 	objID, err := primitive.ObjectIDFromHex(vars["id"])
 	if err != nil {
-		log.Errorf("cast ist going wrong %v, STRING: %v", err)}
+		log.Errorf("cast ist going wrong %v, STRING: %v", err, objID)}
 	return objID, nil
 }

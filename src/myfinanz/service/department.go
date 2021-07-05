@@ -47,5 +47,7 @@ func DeleteDepartment(id primitive.ObjectID) (*model.Department, error) {
 		log.Fatalf("Error %v was thorwn", err)
 	}
 	log.Printf("Successfully deleted department %v from DB", deleteDepartmentResult)
+	updateClub, err := client.UpdateClubFromDBRemove(id)
+	log.Printf("successfully deleted Department and updated Club: %v", updateClub)
 	return nil, nil
 }

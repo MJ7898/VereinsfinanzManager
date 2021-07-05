@@ -17,7 +17,7 @@ den ganzen Verein verteilt werden kann. Die Ausgangsposition bezüglich des Geld
 Bei der Anlage eines Vereins, können nachträglich Abteilungen erstellt werden, die im Verein auf oberste Ebene mit der Identifikationsnummer registriert werden. 
 Dahingehend kann der CLub lediglich auf seine Abteilungen vergrößert oder verkleinert (aktualisiert) werden. 
 Beim Löschen eines Vereins werden sämtliche Abteilungen und Teams mitgelöscht. Es werden keine Informationen (Datenleichen) liegengelassen.
-#### Abeilung
+#### Abteilung
 Die Abteilung ist von der Einstufung als auch von der Ebene das Herzstück. Diese Ebene beinhaltet die meisten Abhängigkeiten auf die Ebene Club und die darunterliegende Ebene der Teams. 
 Die Abteilungen werden im Club registriert. Anders werden die Teams mit der jeweiligen Identifikationsnummer in der Abteilung hinterlegt, damit der READ-Aufwand auf mehrere Collections der NoSQL Datenbank vermieden werden. 
 Durch die klare Zuordnung wird deutlich, welche Teams zu einer Abteilung gehören. 

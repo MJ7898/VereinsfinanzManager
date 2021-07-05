@@ -96,32 +96,27 @@ func DeleteHRDB(id primitive.ObjectID,) (model.HumanResources, error) {
 	return result, nil
 }
 
-func UpdateHRDBWithTeamDependency(hr *model.HumanResources, teamID primitive.ObjectID) (model.HumanResources, error) {
-	result := model.HumanResources{}
+func UpdateHRDBWithTeamDependency(hr *model.HumanResources, teamID primitive.ObjectID) (*model.HumanResources, error) {
+	//result := model.HumanResources{}
 	//Define filter query for fetching specific document from collection
-	filter := bson.D{primitive.E{Key: "_id", Value: hr.ID}}
+	//filter := bson.D{primitive.E{Key: "_id", Value: hr.ID}}
 	//Define updater for to specifiy change to be updated.
-	updater := bson.D{primitive.E{Key: "$set", Value: bson.M{
-		"schema_version":     hr.SchemaVersion,
-		"player_name": hr.Name,
-		"value":  hr.Value,
-		"salary": hr.Salary,
-		"contract_runtime": hr.ContractRuntime,
-		"team_id": teamID,
-	}}}
-	log.Printf("Result from UPDATER: %v", updater)
+	//updater := bson.D{primitive.E{Key: "$set", Value: }}
+	//log.Printf("Result from UPDATER: %v", updater)
+	hr.TeamID = teamID
 
 	//Get MongoDB connection using connectionhelper.
 	client, err := GetMongoClient()
 	if err != nil {
-		return result, err
+		return hr, err
 	}
 	//Create a handle to the respective collection in the database.
 	collection := client.Database("VfM").Collection("HR")
 	//Perform FindOne operation & validate against the error.
-	err = collection.FindOne(context.TODO(), filter).Decode(&result)
+	createHR, err := collection.InsertOne(context.TODO(), hr)
+	log.Printf("Successfully insterte Human Resourse: %v", createHR)
 
-	if err != nil {
+	/*if err != nil {
 		return result, err
 	}
 	updatedDocu, err := collection.UpdateOne(context.TODO(), filter, updater)
@@ -130,6 +125,6 @@ func UpdateHRDBWithTeamDependency(hr *model.HumanResources, teamID primitive.Obj
 	if err != nil {
 		return result, nil
 	}
-	//Return result without any error.
-	return model.HumanResources{}, nil
+	//Return result without any error.*/
+	return hr, nil
 }

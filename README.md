@@ -116,7 +116,7 @@ Ein Go-Backend Projekt im Rahmen der Vorlesung Backend-Entwicklung im Studiengan
 ````json
 {
   "schema_version": "1",
-  "player_name,omitempty": "Kai Havertz",
+  "name": "Kai Havertz",
   "value": 9000000,
   "salary": 5000000,
   "contract_runtime": "2 years",
@@ -128,7 +128,7 @@ Ein Go-Backend Projekt im Rahmen der Vorlesung Backend-Entwicklung im Studiengan
 ````json
 {
   "schema_version": "1",
-  "player_name,omitempty": "Lizenzgebühr 1. Liga",
+  "name": "Lizenzgebühr 1. Liga",
   "cost": 1500000,
   "validity": "Gültig bis 2022",
   "duration": "2 years",

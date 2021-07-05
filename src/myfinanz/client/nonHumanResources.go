@@ -99,7 +99,7 @@ func DeleteNHRDB(id primitive.ObjectID,) (model.NonHumanResources, error) {
 func UpdateNHRDBWithTeamDependency(nhr *model.NonHumanResources, teamID primitive.ObjectID) (model.NonHumanResources, error) {
 	result := model.NonHumanResources{}
 	//Define filter query for fetching specific document from collection
-	filter := bson.D{primitive.E{Key: "_id", Value: nhr.ID}}
+	// filter := bson.D{primitive.E{Key: "_id", Value: nhr.ID}}
 	//Define updater for to specifiy change to be updated.
 	updater := bson.D{primitive.E{Key: "$set", Value: bson.M{
 		"schema_version":    nhr.SchemaVersion,
@@ -119,9 +119,9 @@ func UpdateNHRDBWithTeamDependency(nhr *model.NonHumanResources, teamID primitiv
 	//Create a handle to the respective collection in the database.
 	collection := client.Database("VfM").Collection("NHR")
 	//Perform FindOne operation & validate against the error.
-	err = collection.FindOne(context.TODO(), filter).Decode(&result)
-
-	if err != nil {
+	insertNHR, err := collection.InsertOne(context.TODO(), updater)
+	log.Printf("Successfully inserter NHR: %v", insertNHR)
+	/*if err != nil {
 		return result, err
 	}
 	updatedDocu, err := collection.UpdateOne(context.TODO(), filter, updater)
@@ -130,6 +130,6 @@ func UpdateNHRDBWithTeamDependency(nhr *model.NonHumanResources, teamID primitiv
 	if err != nil {
 		return result, nil
 	}
-	//Return result without any error.
+	//Return result without any error.*/
 	return model.NonHumanResources{}, nil
 }

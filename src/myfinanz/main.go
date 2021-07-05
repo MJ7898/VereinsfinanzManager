@@ -46,18 +46,18 @@ func main() {
 	router.HandleFunc("/teams/{id}", handler.UpdateTeam).Methods("PUT")
 	router.HandleFunc("/teams/{id}", handler.DeleteTeam).Methods("DELETE")
 	router.HandleFunc("/teams/{id}/hr", handler.AddHR).Methods("POST")
-	router.HandleFunc("/campaigns/{id}/nhr", handler.AddNHR).Methods("POST")
+	router.HandleFunc("/teams/{id}/nhr", handler.AddNHR).Methods("POST")
 
 	// HR
-	router.HandleFunc("/hr", handler.CreateHR).Methods("POST")
-	router.HandleFunc("/hr", handler.GetHR).Methods("GET")
-	router.HandleFunc("/hrs/{id}", handler.GetHRS).Methods("GET")
+	//router.HandleFunc("/hr", handler.CreateHR).Methods("POST")
+	router.HandleFunc("/hrs", handler.GetHRS).Methods("GET")
+	router.HandleFunc("/hrs/{id}", handler.GetHR).Methods("GET")
 	router.HandleFunc("/hrs/{id}", handler.DeleteHR).Methods("DELETE")
 
 	// NHR
-	router.HandleFunc("/nhr", handler.CreateNHR).Methods("POST")
-	router.HandleFunc("/nhr", handler.GetNHR).Methods("GET")
-	router.HandleFunc("/nhrs/{id}", handler.GetNHRS).Methods("GET")
+	//router.HandleFunc("/nhr", handler.CreateNHR).Methods("POST")
+	router.HandleFunc("/nhrs", handler.GetNHRS).Methods("GET")
+	router.HandleFunc("/nhrs/{id}", handler.GetNHR).Methods("GET")
 	router.HandleFunc("/nhrs/{id}", handler.DeleteNHR).Methods("DELETE")
 
 	if err := http.ListenAndServe(":8000", router); err != nil {

@@ -51,7 +51,7 @@ func GetNHRS(w http.ResponseWriter, _ *http.Request)  {
 	sendJson(w, nhr)
 }
 
-// GetHR -Handler function to get an single HumanResource with id/**
+// GetNHR -Handler function to get an single HumanResource with id/**
 func GetNHR(w http.ResponseWriter, r *http.Request)  {
 	id, err := getId(r)
 	// var objectResult primitive.ObjectID = id

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/utils"
 	"net/http"
 
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/model"
@@ -51,12 +52,12 @@ func GetDepartments(w http.ResponseWriter, _ *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	log.Printf("Leaving GetDepartments Handler")
-	sendJson(w, departments)
+	utils.SendJson(w, departments)
 }
 
 // GetDepartment GetDepartment-Handler function to get an single department with id/**
 func GetDepartment(w http.ResponseWriter, r *http.Request) {
-	id, err := getId(r)
+	id, err := utils.GetId(r)
 	// var objectResult primitive.ObjectID = id
 	if err != nil {
 		log.Errorf("Error calling servie Get(Single)Department: %v", err)
@@ -65,11 +66,11 @@ func GetDepartment(w http.ResponseWriter, r *http.Request) {
 	}
 
 	department, _ := service.GetDepartment(id)
-	sendJson(w, department)
+	utils.SendJson(w, department)
 }
 
 func UpdateDepartment(w http.ResponseWriter, r *http.Request) {
-	id, err := getId(r)
+	id, err := utils.GetId(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
@@ -88,11 +89,11 @@ func UpdateDepartment(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	sendJson(w, department)
+	utils.SendJson(w, department)
 }
 
 func DeleteDepartment(w http.ResponseWriter, r *http.Request) {
-	id, err := getId(r)
+	id, err := utils.GetId(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -109,11 +110,11 @@ func DeleteDepartment(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 department not found", http.StatusNotFound)
 		return
 	}
-	sendJson(w, result{Success: "Success (Ok)"})
+	utils.SendJson(w, utils.Result{Success: "Success (Ok)"})
 }
 
 func AddTeamWithDepartment(w http.ResponseWriter, r *http.Request) {
-	departmentID, err := getId(r)
+	departmentID, err := utils.GetId(r)
 	if err != nil {
 		log.Errorf("Error getting ID: %v", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)

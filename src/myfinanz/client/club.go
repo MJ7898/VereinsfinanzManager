@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/mongoDB"
+	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/utils"
 
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/model"
 	log "github.com/sirupsen/logrus"
@@ -148,7 +149,7 @@ func UpdateClubFromDBRemove(id primitive.ObjectID) (model.Club, error) {
 		return result, err
 	}
 
-	newDepartments := remove(result.Departments, id)
+	newDepartments := utils.Remove(result.Departments, id)
 
 	updater := bson.D{primitive.E{Key: "$set", Value: bson.M{
 		"schema_version": result.SchemaVersion,

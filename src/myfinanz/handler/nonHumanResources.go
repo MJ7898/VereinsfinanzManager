@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/model"
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/service"
+	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/utils"
 	log "github.com/sirupsen/logrus"
 	"net/http"
 )
@@ -48,12 +49,12 @@ func GetNHRS(w http.ResponseWriter, _ *http.Request)  {
 		log.Errorf("Failure encoding value to JSON: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	sendJson(w, nhr)
+	utils.SendJson(w, nhr)
 }
 
 // GetNHR -Handler function to get an single HumanResource with id/**
 func GetNHR(w http.ResponseWriter, r *http.Request)  {
-	id, err := getId(r)
+	id, err := utils.GetId(r)
 	// var objectResult primitive.ObjectID = id
 	if err != nil {
 		log.Errorf("Error calling servie Get(Single)NHR: %v", err)
@@ -62,11 +63,11 @@ func GetNHR(w http.ResponseWriter, r *http.Request)  {
 	}
 
 	team, _ := service.GetNHR(id)
-	sendJson(w, team)
+	utils.SendJson(w, team)
 }
 
 func DeleteNHR(w http.ResponseWriter, r *http.Request) {
-	id, err := getId(r)
+	id, err := utils.GetId(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -83,11 +84,11 @@ func DeleteNHR(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 nhr not found", http.StatusNotFound)
 		return
 	}
-	sendJson(w, result{Success: "Success (Ok)"})
+	utils.SendJson(w, utils.Result{Success: "Success (Ok)"})
 }
 
 func AddNHR(w http.ResponseWriter, r *http.Request)  {
-	teamId, err := getId(r)
+	teamId, err := utils.GetId(r)
 	if err != nil {
 		log.Errorf("Error getting ID: %v", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -107,7 +108,7 @@ func AddNHR(w http.ResponseWriter, r *http.Request)  {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	sendJson(w, nhrDon)
+	utils.SendJson(w, nhrDon)
 }
 
 func getNHRDon(r *http.Request) (*model.NonHumanResources, error) {

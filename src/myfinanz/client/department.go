@@ -91,17 +91,6 @@ func GetDepartmentsFromDB() ([]model.Department, error) {
 	return getResult, nil
 }
 
-func remove(s []primitive.ObjectID, id primitive.ObjectID) []primitive.ObjectID {
-	for i := 0; i <= len(s); i++ {
-		if id == s[i] {
-			s[i] = s[len(s)-1]
-			s[len(s)-1] = primitive.ObjectID{}
-			return s[:len(s)-1]
-		}
-	}
-	return s
-}
-
 func UpdateDepartmentFromDB(id primitive.ObjectID, department *model.Department) (model.Department, error) {
 	result := model.Department{}
 

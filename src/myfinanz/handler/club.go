@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/utils"
 	"net/http"
 
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/model"
@@ -51,13 +52,13 @@ func GetClubs(w http.ResponseWriter, _ *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	log.Infof("Leaving GetClub-Handler")
-	sendJson(w, clubs)
+	utils.SendJson(w, clubs)
 }
 
 // GetDepartment GetDepartment-Handler function to get an single department with id/**
 func GetClub(w http.ResponseWriter, r *http.Request) {
 	log.Infof("Entering GetClub-Handler")
-	id, err := getId(r)
+	id, err := utils.GetId(r)
 	// var objectResult primitive.ObjectID = id
 	if err != nil {
 		log.Errorf("Error calling servie Get(Single)Club: %v", err)
@@ -66,37 +67,37 @@ func GetClub(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Infof("Leaving GetClub-Handler")
 	club, _ := service.GetClub(id)
-	sendJson(w, club)
+	utils.SendJson(w, club)
 }
 
 func UpdateClub(w http.ResponseWriter, r *http.Request) {
 	log.Infof("Entering UpdateClub-Handler")
-	id, err := getId(r)
+	id, err := utils.GetId(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
-	club1, err := getClub(r)
+	clubModel, err := getClub(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	club, err := service.UpdateClub(id, club1)
+	if clubModel == nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	club, err := service.UpdateClub(id, clubModel)
 	if err != nil {
 		log.Errorf("Failure updateing club with ID %v: %v", id, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if club1 == nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
 	log.Infof("Leaving UpdateClub-Handler")
-	sendJson(w, club)
+	utils.SendJson(w, club)
 }
 
 func DeleteClub(w http.ResponseWriter, r *http.Request) {
 	log.Infof("Entering DeleteClub-Handler")
-	id, err := getId(r)
+	id, err := utils.GetId(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -114,5 +115,5 @@ func DeleteClub(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Infof("Leaving DeleteClub-Handler")
-	sendJson(w, result{Success: "Success (Ok)"})
+	utils.SendJson(w, utils.Result{Success: "Success (Ok)"})
 }

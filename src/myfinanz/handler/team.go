@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/utils"
 	"net/http"
 
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/model"
@@ -49,12 +50,12 @@ func GetTeams(w http.ResponseWriter, _ *http.Request) {
 		log.Errorf("Failure encoding value to JSON: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	sendJson(w, teams)
+	utils.SendJson(w, teams)
 }
 
 // GetTeam GetTeam-Handler function to get an single department with id/**
 func GetTeam(w http.ResponseWriter, r *http.Request) {
-	id, err := getId(r)
+	id, err := utils.GetId(r)
 	// var objectResult primitive.ObjectID = id
 	if err != nil {
 		log.Errorf("Error calling servie Get(Single)Team: %v", err)
@@ -63,11 +64,11 @@ func GetTeam(w http.ResponseWriter, r *http.Request) {
 	}
 
 	team, _ := service.GetTeam(id)
-	sendJson(w, team)
+	utils.SendJson(w, team)
 }
 
 func UpdateTeam(w http.ResponseWriter, r *http.Request) {
-	id, err := getId(r)
+	id, err := utils.GetId(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
@@ -86,11 +87,11 @@ func UpdateTeam(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	sendJson(w, team)
+	utils.SendJson(w, team)
 }
 
 func DeleteTeam(w http.ResponseWriter, r *http.Request) {
-	id, err := getId(r)
+	id, err := utils.GetId(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -107,11 +108,11 @@ func DeleteTeam(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 team not found", http.StatusNotFound)
 		return
 	}
-	sendJson(w, result{Success: "Success (Ok)"})
+	utils.SendJson(w, utils.Result{Success: "Success (Ok)"})
 }
 
 func TeamCost (w http.ResponseWriter, r *http.Request) {
-	id, err := getId(r)
+	id, err := utils.GetId(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
@@ -122,5 +123,5 @@ func TeamCost (w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sendJson(w, cost)
+	utils.SendJson(w, cost)
 }

@@ -1,4 +1,4 @@
-package handler
+package utils
 
 import (
 	"encoding/json"
@@ -8,11 +8,11 @@ import (
 	"net/http"
 )
 
-type result struct {
+type Result struct {
 	Success string `json:"success"`
 }
 
-func sendJson(w http.ResponseWriter, value interface{}) {
+func SendJson(w http.ResponseWriter, value interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(value); err != nil {
 		log.Errorf("Failure encoding value to JSON: %v", err)
@@ -20,11 +20,22 @@ func sendJson(w http.ResponseWriter, value interface{}) {
 	}
 }
 
-func getId(r *http.Request) (primitive.ObjectID, error)  {
+func GetId(r *http.Request) (primitive.ObjectID, error)  {
 	vars := mux.Vars(r)
 
 	objID, err := primitive.ObjectIDFromHex(vars["id"])
 	if err != nil {
 		log.Errorf("cast ist going wrong %v, STRING: %v", err, objID)}
 	return objID, nil
+}
+
+func Remove(s []primitive.ObjectID, id primitive.ObjectID) []primitive.ObjectID {
+	for i := 0; i <= len(s); i++ {
+		if id == s[i] {
+			s[i] = s[len(s)-1]
+			s[len(s)-1] = primitive.ObjectID{}
+			return s[:len(s)-1]
+		}
+	}
+	return s
 }

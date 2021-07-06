@@ -112,7 +112,7 @@ func UpdateNHRDBWithTeamDependency(nhr *model.NonHumanResources, teamID primitiv
 	log.Printf("Result from UPDATER: %v", updater)
 
 	//Get MongoDB connection using connectionhelper.
-	client, err := GetMongoClient()
+	client, err := mongoDB.GetMongoClient()
 	if err != nil {
 		return result, err
 	}

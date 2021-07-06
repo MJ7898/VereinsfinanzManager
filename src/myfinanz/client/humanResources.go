@@ -106,7 +106,7 @@ func UpdateHRDBWithTeamDependency(hr *model.HumanResources, teamID primitive.Obj
 	hr.TeamID = teamID
 
 	//Get MongoDB connection using connectionhelper.
-	client, err := GetMongoClient()
+	client, err := mongoDB.GetMongoClient()
 	if err != nil {
 		return hr, err
 	}

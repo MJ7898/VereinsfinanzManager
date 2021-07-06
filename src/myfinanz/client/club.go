@@ -14,7 +14,6 @@ import (
 
 func CreateClubDB(club model.Club) error {
 	client, err := mongoDB.GetMongoClient()
-	//client, ctx, err := GetMongoDBConnection()
 	log.Infof("Client: Error during getMongoClient: %v was thrown", err)
 	//log.Infof("Error: %v was thrown", ctx)
 	res, err := client.Database("VfM").Collection("Club").InsertOne(context.TODO(), club)

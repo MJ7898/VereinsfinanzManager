@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	_ "go.mongodb.org/mongo-driver/mongo/options"
 	_ "go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
@@ -23,32 +23,6 @@ var clientInstanceError error
 
 //Used to execute client creation procedure only once.
 var mongoOnce sync.Once
-
-// TODO remove this function here and use ist in the mongoDB package
-
-/*
-func GetMongoClient() (*mongo.Client, error) {
-	//Perform connection creation operation only once.
-	mongoOnce.Do(func() {
-		// Set client options
-		clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
-		// Connect to MongoDB
-		client, err := mongo.Connect(context.TODO(), clientOptions)
-		if err != nil {
-			clientInstanceError = err
-		}
-		// Check the connection
-		err = client.Ping(context.TODO(), nil)
-		if err == nil {
-			log.Infoln("Ping Successful")
-		}
-		if err != nil {
-			clientInstanceError = err
-		}
-		clientInstance = client
-	})
-	return clientInstance, clientInstanceError
-}*/
 
 func CreateDepartmentDB(department model.Department) error {
 	client, err := mongoDB.GetMongoClient()
@@ -195,9 +169,9 @@ func UpdateCosts(insertedTeam *mongo.InsertOneResult, team *model.Team, departme
 		return err
 	}
 
-	oid, _ := insertedTeam.InsertedID.(primitive.ObjectID)
-	log.Printf("Team ID : %v", oid)
-	result.Teams = append(result.Teams, oid)
+	teamID, _ := insertedTeam.InsertedID.(primitive.ObjectID)
+	log.Printf("Team ID : %v", teamID)
+	result.Teams = append(result.Teams, teamID)
 	log.Printf("Team ID Array: %v", result.Teams)
 
 	log.Printf("Team Costs old: %v", result.DepartmentCost)

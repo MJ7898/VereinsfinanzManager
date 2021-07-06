@@ -1,9 +1,9 @@
 package main
 
 import (
+	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/mongoDB"
 	"net/http"
 
-	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/client"
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/handler"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
@@ -12,7 +12,7 @@ import (
 func init() {
 	// init database
 	defer func() {
-		_, err := client.GetMongoClient()
+		_, err := mongoDB.GetMongoClient()
 		if err != nil {
 			log.Fatalf("Connection to mongoDB refused")
 		}

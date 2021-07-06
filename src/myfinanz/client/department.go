@@ -114,6 +114,7 @@ func UpdateDepartmentFromDB(id primitive.ObjectID, department *model.Department)
 		"department_leader":  department.DepartmentLeader,
 		"department_budget":  department.DepartmentBudget,
 		"teams_id":           department.Teams,
+		"department_cost":    department.DepartmentCost,
 	}}}
 	log.Printf("Result from UPDATER: %v", updater)
 

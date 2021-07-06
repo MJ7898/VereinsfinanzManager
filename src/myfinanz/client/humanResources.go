@@ -97,12 +97,6 @@ func DeleteHRDB(id primitive.ObjectID,) (model.HumanResources, error) {
 }
 
 func UpdateHRDBWithTeamDependency(hr *model.HumanResources, teamID primitive.ObjectID) (*model.HumanResources, error) {
-	//result := model.HumanResources{}
-	//Define filter query for fetching specific document from collection
-	//filter := bson.D{primitive.E{Key: "_id", Value: hr.ID}}
-	//Define updater for to specifiy change to be updated.
-	//updater := bson.D{primitive.E{Key: "$set", Value: }}
-	//log.Printf("Result from UPDATER: %v", updater)
 	hr.TeamID = teamID
 
 	//Get MongoDB connection using connectionhelper.
@@ -116,15 +110,5 @@ func UpdateHRDBWithTeamDependency(hr *model.HumanResources, teamID primitive.Obj
 	createHR, err := collection.InsertOne(context.TODO(), hr)
 	log.Printf("Successfully insterte Human Resourse: %v", createHR)
 
-	/*if err != nil {
-		return result, err
-	}
-	updatedDocu, err := collection.UpdateOne(context.TODO(), filter, updater)
-	log.Printf("Updated Document as follow: %v", updatedDocu)
-
-	if err != nil {
-		return result, nil
-	}
-	//Return result without any error.*/
 	return hr, nil
 }

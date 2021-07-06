@@ -109,3 +109,18 @@ func DeleteTeam(w http.ResponseWriter, r *http.Request) {
 	}
 	sendJson(w, result{Success: "Success (Ok)"})
 }
+
+func TeamCost (w http.ResponseWriter, r *http.Request) {
+	id, err := getId(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+
+	cost, err := service.GetResourceCost(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	sendJson(w, cost)
+}

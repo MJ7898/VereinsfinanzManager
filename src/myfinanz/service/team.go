@@ -4,6 +4,7 @@ import (
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/client"
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/model"
 	log "github.com/sirupsen/logrus"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -46,4 +47,13 @@ func DeleteTeam(id primitive.ObjectID) (*model.Team, error) {
 	}
 	log.Printf("Successfully deleted team %v from DB", deleteTeamResult)
 	return nil, nil
+}
+func GetResourceCost(id primitive.ObjectID) ([]bson.M, error) {
+	teamCost, err := client.TeamCosts(id)
+	if err != nil {
+		log.Fatalf("Error %v was thorwn", err)
+	}
+	log.Printf("Successfully get costs from team %v from DB", teamCost)
+	return teamCost, nil
+
 }

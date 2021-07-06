@@ -10,20 +10,20 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func CreateNHRDB(hr model.NonHumanResources) error {
+func CreateNHRDB(nhr model.NonHumanResources) error {
 	client, err := mongoDB.GetMongoClient()
 	//client, ctx, err := GetMongoDBConnection()
 	log.Infof("Error during getMongoClient: %v was thrown", err)
 	//log.Infof("Error: %v was thrown", ctx)
-	res, err := client.Database("VfM").Collection("NHR").InsertOne(context.TODO(), hr)
+	res, err := client.Database("VfM").Collection("NHR").InsertOne(context.TODO(), nhr)
 	if err != nil {
 		log.Infof("Error during insertOne: %v was thrown", err)
 		log.Infof("Connection isn`t up %v", res)
 		return err
 	}
-	entry := log.WithField("ID", hr)
-	entry.Infof("Successfully added team: %v", res)
-	log.Printf("Successfully added Team")
+	entry := log.WithField("ID", nhr)
+	entry.Infof("Successfully added nhr: %v", res)
+	log.Printf("Successfully added NHR")
 	return err
 }
 
@@ -96,40 +96,19 @@ func DeleteNHRDB(id primitive.ObjectID,) (model.NonHumanResources, error) {
 	return result, nil
 }
 
-func UpdateNHRDBWithTeamDependency(nhr *model.NonHumanResources, teamID primitive.ObjectID) (model.NonHumanResources, error) {
-	result := model.NonHumanResources{}
-	//Define filter query for fetching specific document from collection
-	// filter := bson.D{primitive.E{Key: "_id", Value: nhr.ID}}
-	//Define updater for to specifiy change to be updated.
-	updater := bson.D{primitive.E{Key: "$set", Value: bson.M{
-		"schema_version":    nhr.SchemaVersion,
-		"player_name": nhr.Name,
-		"validity":  nhr.Validity,
-		"cost": nhr.Cost,
-		"duration": nhr.TimeStamp,
-		"team_id": teamID,
-	}}}
-	log.Printf("Result from UPDATER: %v", updater)
+func UpdateNHRDBWithTeamDependency(nhr *model.NonHumanResources, teamID primitive.ObjectID) (*model.NonHumanResources, error) {
+	nhr.TeamID = teamID
 
 	//Get MongoDB connection using connectionhelper.
 	client, err := mongoDB.GetMongoClient()
 	if err != nil {
-		return result, err
+		return nhr, err
 	}
 	//Create a handle to the respective collection in the database.
 	collection := client.Database("VfM").Collection("NHR")
 	//Perform FindOne operation & validate against the error.
-	insertNHR, err := collection.InsertOne(context.TODO(), updater)
-	log.Printf("Successfully inserter NHR: %v", insertNHR)
-	/*if err != nil {
-		return result, err
-	}
-	updatedDocu, err := collection.UpdateOne(context.TODO(), filter, updater)
-	log.Printf("Updated Document as follow: %v", updatedDocu)
+	createNHR, err := collection.InsertOne(context.TODO(), nhr)
+	log.Printf("Successfully insterte Non Human Resourse: %v", createNHR)
 
-	if err != nil {
-		return result, nil
-	}
-	//Return result without any error.*/
-	return model.NonHumanResources{}, nil
+	return nhr, nil
 }

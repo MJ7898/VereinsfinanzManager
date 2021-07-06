@@ -9,7 +9,7 @@ import (
 
 func CreateNHR(nhr *model.NonHumanResources) error  {
 	result := client.CreateNHRDB(*nhr)
-	log.Printf("Successfully added hr %v to DB", result)
+	log.Printf("Successfully added nhr %v to DB", result)
 	return result
 }
 

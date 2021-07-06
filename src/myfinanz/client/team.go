@@ -2,7 +2,6 @@ package client
 
 import (
 	"context"
-
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/model"
 	"github.com/MJ7898/VereinsfinanzManager/src/myfinanz/mongoDB"
 	log "github.com/sirupsen/logrus"
@@ -131,4 +130,57 @@ func DeleteTeamDB(id primitive.ObjectID) (model.Team, error) {
 	entry.Infof("Successfully deleted team: %v With ID: %v", result, id)
 	log.Printf("Successfully deleted Team")
 	return result, nil
+}
+
+func TeamCosts(id primitive.ObjectID) ([]bson.M, error){
+	//Define filter query for fetching specific document from collection
+	filter := bson.M{"team_id": id}
+	//Get MongoDB connection using connectionhelper.
+	client, err := mongoDB.GetMongoClient()
+	if err != nil {
+		return nil, err
+	}
+	//Create a handle to the respective collection in the database.
+	collectionHR := client.Database("VfM").Collection("HR")
+	//Perform FindOne operation & validate against the error.
+
+	hrDocument, err := collectionHR.Find(context.TODO(), filter) // .Decode(&result)
+	log.Printf("Human Resource %v", hrDocument)
+	if err != nil {
+		log.Printf("Error searching HR: %v", err)
+		return nil, err
+	}
+
+	//if err = hrDocument.All(context.TODO(), &resourcesFiltered); err != nil {
+	//	log.Fatal(err)
+	//}
+	var hr bson.M
+	for hrDocument.Next(context.TODO()) {
+		if err = hrDocument.Decode(&hr); err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	hrDocument.Close(context.TODO())
+
+	collectionNHR := client.Database("VfM").Collection("NHR")
+	//Perform FindOne operation & validate against the error.
+
+	nhrDocument, err := collectionNHR.Find(context.TODO(), filter) // .Decode(&result)
+	//log.Printf("Non Human Resource %v", nhrDocument)
+	//if err = nhrDocument.All(context.TODO(), &resourcesFiltered); err != nil {
+//		log.Fatal(err)
+//	}
+	var nhr bson.M
+	for nhrDocument.Next(context.TODO()) {
+		if err = nhrDocument.Decode(&nhr); err != nil {
+			log.Fatal(err)
+		}
+	}
+	var resourcesFiltered []bson.M
+
+	nhrDocument.Close(context.TODO())
+
+	//Return result without any error.
+	return append(resourcesFiltered, hr, nhr), nil
 }

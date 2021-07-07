@@ -11,11 +11,11 @@ To handle the club of your own you can get it with a special id. This you can ha
 	router.HandleFunc("/clubs", handler.GetClubs).Methods("GET")
 	router.HandleFunc("/clubs/{id}", handler.GetClub).Methods("GET")
 
-To Update informations of your club you can start an drun a PUT-API Command with all updated information which will request as json:
+To Update information of your club you can start an drun a PUT-API Command with all updated information which will request as json:
 
 	router.HandleFunc("/clubs/{id}", handler.UpdateClub).Methods("PUT")
 
-Finally you can delete the club and all dependencies e.g. departments and teams of it:
+Finally, you can delete the club and all dependencies e.g. departments and teams of it:
 
 	router.HandleFunc("/clubs/{id}", handler.DeleteClub).Methods("DELETE")
 
@@ -24,12 +24,12 @@ Partially same with the departments of your club. To add departments to xour clu
     // departments
 	router.HandleFunc("/department", handler.CreateDepartment).Methods("POST")
 
-To request all departments or a single department with an id you can run API-Calls as following: 
+To request all departments, or a single department with an id you can run API-Calls as following: 
 
 	router.HandleFunc("/departments", handler.GetDepartments).Methods("GET")
 	router.HandleFunc("/departments/{id}", handler.GetDepartment).Methods("GET")
 
-If you would like to changes some information of your department or add some depending teams on the department you cann run a simple update with the PUT-API Call:
+If you would like to change some information of your department or add some depending teams on the department you cann run a simple update with the PUT-API Call:
 With this you create a json which will walk through and will compare to the existing one.
 
 	router.HandleFunc("/departments/{id}", handler.UpdateDepartment).Methods("PUT")
@@ -43,7 +43,7 @@ At least you can create teams with all the information it contains.
 	// teams
 	router.HandleFunc("/team", handler.CreateTeam).Methods("POST")
 
-Like the other options and commands, you can find all teams in you organization with the simple GET funciton or you look after a specific teams with an concrete ID:
+Like the other options and commands, you can find all teams in you organization with the simple GET function, or you look after a specific teams with a concrete ID:
 
 	router.HandleFunc("/teams", handler.GetTeams).Methods("GET")
 	router.HandleFunc("/teams/{id}", handler.GetTeam).Methods("GET")

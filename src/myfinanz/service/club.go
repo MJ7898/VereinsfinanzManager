@@ -15,7 +15,6 @@ func CreateClub(club *model.Club) error {
 }
 
 func GetClubs() ([]model.Club, error) {
-	// var departments []model.Department
 	clubs, err := client.GetClubsFromDB()
 	if err != nil {
 		log.Fatalf("No Documents was found after calling GetClubs-Service: %v", err)
@@ -24,7 +23,6 @@ func GetClubs() ([]model.Club, error) {
 }
 
 func GetClub(id primitive.ObjectID) (model.Club, error) {
-	//department := new(model.Department)
 	club, err := client.GetClubWithIDFromDB(id)
 	if err != nil {
 		log.Printf("Service: Document with ID %v not found! LOG: %v", id, err)
@@ -39,7 +37,6 @@ func UpdateClub(id primitive.ObjectID, club *model.Club) (model.Club, error) {
 }
 
 func DeleteClub(id primitive.ObjectID) (*model.Club, error) {
-	// client := client.GetMongoDBConnection
 	deleteClubResult, err := client.DeleteClubDB(id)
 	if err != nil {
 		log.Fatalf("Error %v was thorwn", err)

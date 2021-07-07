@@ -55,11 +55,10 @@ func GetClubs(w http.ResponseWriter, _ *http.Request) {
 	utils.SendJson(w, clubs)
 }
 
-// GetDepartment GetDepartment-Handler function to get an single department with id/**
+// GetClub -Handler function to get an single department with id/**
 func GetClub(w http.ResponseWriter, r *http.Request) {
 	log.Infof("Entering GetClub-Handler")
 	id, err := utils.GetId(r)
-	// var objectResult primitive.ObjectID = id
 	if err != nil {
 		log.Errorf("Error calling servie Get(Single)Club: %v", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)

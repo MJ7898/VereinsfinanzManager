@@ -55,7 +55,6 @@ func GetHRS(w http.ResponseWriter, _ *http.Request)  {
 // GetHR -Handler function to get an single HumanResource with id/**
 func GetHR(w http.ResponseWriter, r *http.Request)  {
 	id, err := utils.GetId(r)
-	// var objectResult primitive.ObjectID = id
 	if err != nil {
 		log.Errorf("Error calling servie Get(Single)HR: %v", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -101,7 +100,6 @@ func AddHR(w http.ResponseWriter, r *http.Request)  {
 		return
 	}
 
-	// TODO: if the hrDon doesn't exist, return 404 - don't show FK error
 	err = service.AddHRDon(teamId, hrDon)
 	if err != nil {
 		log.Errorf("Failure adding hr to team with ID %v: %v", hrDon, err)

@@ -18,8 +18,6 @@ var clientInstanceError error
 //Used to execute client creation procedure only once.
 var mongoOnce sync.Once
 
-// TODO: use this function here and remove it on the client package
-
 func GetMongoClient() (*mongo.Client, error) {
 	//Perform connection creation operation only once.
 	mongoOnce.Do(func() {

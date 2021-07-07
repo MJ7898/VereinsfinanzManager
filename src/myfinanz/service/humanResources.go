@@ -14,7 +14,6 @@ func CreateHR(hr *model.HumanResources) error  {
 }
 
 func GetHRS() ([]model.HumanResources, error)  {
-	// var teams []model.Department
 	hrs, err := client.GetHRsFromDB()
 	if err != nil {
 		log.Fatalf("No Documents was found after calling GetTeams: %v", err)
@@ -31,7 +30,6 @@ func GetHR(id primitive.ObjectID)(model.HumanResources, error){
 }
 
 func DeleteHR(id primitive.ObjectID) (*model.HumanResources, error)  {
-	// client := client.GetMongoDBConnection
 	deleteHRResult, err :=  client.DeleteHRDB(id)
 	if err != nil {
 		log.Fatalf("Error %v was thorwn", err)
@@ -46,7 +44,6 @@ func AddHRDon(id primitive.ObjectID, hrDon *model.HumanResources) error  {
 		return err
 	}
 
-	// team.ID := teamId
 	result, _ := client.UpdateHRDBWithTeamDependency(hrDon, team.ID)
 	log.Printf("Successfully added human ressource and put there the team id: %v", result)
 	return nil

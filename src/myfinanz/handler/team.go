@@ -28,7 +28,6 @@ func CreateTeam(w http.ResponseWriter, r *http.Request) {
 func getTeam(r *http.Request) (*model.Team, error) {
 	log.Infof("Entering getDepartment-Handler")
 	var team model.Team
-	//ToDo: loh http body ad middleware
 	err := json.NewDecoder(r.Body).Decode(&team)
 	if err != nil {
 		log.Errorf("Can't serialize request body to team struct: %v", err)
@@ -56,7 +55,6 @@ func GetTeams(w http.ResponseWriter, _ *http.Request) {
 // GetTeam GetTeam-Handler function to get an single department with id/**
 func GetTeam(w http.ResponseWriter, r *http.Request) {
 	id, err := utils.GetId(r)
-	// var objectResult primitive.ObjectID = id
 	if err != nil {
 		log.Errorf("Error calling servie Get(Single)Team: %v", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)

@@ -15,18 +15,14 @@ func CreateDepartment(department *model.Department) error {
 }
 
 func GetDepartments() ([]model.Department, error) {
-	log.Printf("Entering GetDepartments Service")
-	// var departments []model.Department
 	departments, err := client.GetDepartmentsFromDB()
 	if err != nil {
 		log.Fatalf("No Documents was found after calling GetDepartments: %v", err)
 	}
-	log.Printf("Leaving GetDepartments Service")
 	return departments, nil
 }
 
 func GetDepartment(id primitive.ObjectID) (model.Department, error) {
-	//department := new(model.Department)
 	department, err := client.GetDepratmentWithIDFromDB(id)
 	if err != nil {
 		log.Printf("Document with ID %v not found! LOG: %v", id, err)
@@ -41,7 +37,6 @@ func UpdateDepartment(id primitive.ObjectID, department *model.Department) (*mod
 }
 
 func DeleteDepartment(id primitive.ObjectID) (*model.Department, error) {
-	// client := client.GetMongoDBConnection
 	deleteDepartmentResult, err := client.DeleteDepartmentDB(id)
 	if err != nil {
 		log.Fatalf("Error %v was thorwn", err)

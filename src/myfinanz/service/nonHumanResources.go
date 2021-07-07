@@ -14,7 +14,6 @@ func CreateNHR(nhr *model.NonHumanResources) error  {
 }
 
 func GetNHRS() ([]model.NonHumanResources, error)  {
-	// var teams []model.Department
 	nhrs, err := client.GetNHRsFromDB()
 	if err != nil {
 		log.Fatalf("No Documents was found after calling GetNHRSs: %v", err)
@@ -31,7 +30,6 @@ func GetNHR(id primitive.ObjectID)(model.NonHumanResources, error){
 }
 
 func DeleteNHR(id primitive.ObjectID) (*model.NonHumanResources, error)  {
-	// client := client.GetMongoDBConnection
 	deleteNHRResult, err :=  client.DeleteNHRDB(id)
 	if err != nil {
 		log.Fatalf("Error %v was thorwn", err)
@@ -46,7 +44,6 @@ func AddNHRDon(id primitive.ObjectID, nhrDon *model.NonHumanResources) error  {
 		return err
 	}
 
-	// team.ID := teamId
 	result, _ := client.UpdateNHRDBWithTeamDependency(nhrDon, team.ID)
 	log.Printf("Successfully added human ressource and put there the team id: %v", result)
 	return nil

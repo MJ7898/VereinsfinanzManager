@@ -16,7 +16,6 @@ func CreateTeam(team *model.Team) (*mongo.InsertOneResult, error) {
 }
 
 func GetTeams() ([]model.Team, error) {
-	// var teams []model.Department
 	teams, err := client.GetTeamsFromDB()
 	if err != nil {
 		log.Fatalf("No Documents was found after calling GetTeams: %v", err)
@@ -25,7 +24,6 @@ func GetTeams() ([]model.Team, error) {
 }
 
 func GetTeam(id primitive.ObjectID) (model.Team, error) {
-	//team := new(model.Department)
 	team, err := client.GetTeamWithIDFromDB(id)
 	if err != nil {
 		log.Printf("Document with ID %V not found! LOG: %v", id, err)
@@ -40,7 +38,6 @@ func UpdateTeam(id primitive.ObjectID, team *model.Team) (*model.Team, error) {
 }
 
 func DeleteTeam(id primitive.ObjectID) (*model.Team, error) {
-	// client := client.GetMongoDBConnection
 	deleteTeamResult, err := client.DeleteTeamDB(id)
 	if err != nil {
 		log.Fatalf("Error %v was thorwn", err)

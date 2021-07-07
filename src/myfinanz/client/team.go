@@ -151,9 +151,6 @@ func TeamCosts(id primitive.ObjectID) ([]bson.M, error){
 		return nil, err
 	}
 
-	//if err = hrDocument.All(context.TODO(), &resourcesFiltered); err != nil {
-	//	log.Fatal(err)
-	//}
 	var hr bson.M
 	for hrDocument.Next(context.TODO()) {
 		if err = hrDocument.Decode(&hr); err != nil {
@@ -167,10 +164,7 @@ func TeamCosts(id primitive.ObjectID) ([]bson.M, error){
 	//Perform FindOne operation & validate against the error.
 
 	nhrDocument, err := collectionNHR.Find(context.TODO(), filter) // .Decode(&result)
-	//log.Printf("Non Human Resource %v", nhrDocument)
-	//if err = nhrDocument.All(context.TODO(), &resourcesFiltered); err != nil {
-//		log.Fatal(err)
-//	}
+
 	var nhr bson.M
 	for nhrDocument.Next(context.TODO()) {
 		if err = nhrDocument.Decode(&nhr); err != nil {

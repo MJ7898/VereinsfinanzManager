@@ -27,7 +27,6 @@ func CreateNHR(w http.ResponseWriter, r *http.Request)  {
 func getNHR(r *http.Request) (*model.NonHumanResources, error)  {
 	log.Infof("Entering getNHR-Handler")
 	var nhr model.NonHumanResources
-	//ToDo: loh http body ad middleware
 	err := json.NewDecoder(r.Body).Decode(&nhr)
 	if err != nil {
 		log.Errorf("Can't serialize request body to nhr struct: %v", err)
@@ -101,7 +100,6 @@ func AddNHR(w http.ResponseWriter, r *http.Request)  {
 		return
 	}
 
-	// TODO: if the nhrDon doesn't exist, return 404 - don't show FK error
 	err = service.AddNHRDon(teamId, nhrDon)
 	if err != nil {
 		log.Errorf("Failure adding nhr to team with ID %v: %v", nhrDon, err)

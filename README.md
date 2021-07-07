@@ -1,5 +1,5 @@
 # VereinsfinanzManager - VfM
-Ein Go-Backend Projekt im Rahmen der Vorlesung Backend-Entwicklung im Studiengang Professionale Softwarae ENgineering (PSE) zum Master an der Knowledge Foundation @ Reutlingen University
+Ein Go-Backend Projekt im Rahmen der Vorlesung Backend-Entwicklung im Studiengang Professionale Softwarae Engineering (PSE) zum Master an der Knowledge Foundation @ Reutlingen University
 ## The current json of our Club are as following
 
 ### Club

@@ -12,9 +12,7 @@ import (
 
 func CreateNHRDB(nhr model.NonHumanResources) error {
 	client, err := mongoDB.GetMongoClient()
-	//client, ctx, err := GetMongoDBConnection()
 	log.Infof("Error during getMongoClient: %v was thrown", err)
-	//log.Infof("Error: %v was thrown", ctx)
 	res, err := client.Database("VfM").Collection("NHR").InsertOne(context.TODO(), nhr)
 	if err != nil {
 		log.Infof("Error during insertOne: %v was thrown", err)
@@ -30,21 +28,16 @@ func CreateNHRDB(nhr model.NonHumanResources) error {
 // GetNHRWithIDFromDB  GetIssuesByCode - Get All issues for collection
 func GetNHRWithIDFromDB(id primitive.ObjectID) (model.NonHumanResources, error)  {
 	result := model.NonHumanResources{}
-	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
-	//Get MongoDB connection using connectionhelper.
 	client, err := mongoDB.GetMongoClient()
 	if err != nil {
 		return result, err
 	}
-	//Create a handle to the respective collection in the database.
 	collection := client.Database("VfM").Collection("NHR")
-	//Perform FindOne operation & validate against the error.
 	err = collection.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
 		return result, err
 	}
-	//Return result without any error.
 	return result, nil
 }
 
@@ -77,7 +70,6 @@ func GetNHRsFromDB() ([]model.NonHumanResources, error) {
 
 func DeleteNHRDB(id primitive.ObjectID,) (model.NonHumanResources, error) {
 	result := model.NonHumanResources{}
-	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 
 	client, err := mongoDB.GetMongoClient()
@@ -99,14 +91,11 @@ func DeleteNHRDB(id primitive.ObjectID,) (model.NonHumanResources, error) {
 func UpdateNHRDBWithTeamDependency(nhr *model.NonHumanResources, teamID primitive.ObjectID) (*model.NonHumanResources, error) {
 	nhr.TeamID = teamID
 
-	//Get MongoDB connection using connectionhelper.
 	client, err := mongoDB.GetMongoClient()
 	if err != nil {
 		return nhr, err
 	}
-	//Create a handle to the respective collection in the database.
 	collection := client.Database("VfM").Collection("NHR")
-	//Perform FindOne operation & validate against the error.
 	createNHR, err := collection.InsertOne(context.TODO(), nhr)
 	log.Printf("Successfully insterte Non Human Resourse: %v", createNHR)
 

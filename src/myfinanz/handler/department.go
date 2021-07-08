@@ -11,7 +11,6 @@ import (
 )
 
 func CreateDepartment(w http.ResponseWriter, r *http.Request) {
-	log.Infof("Entering createDepartment-Handler")
 	department, err := getDepartment(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -22,36 +21,25 @@ func CreateDepartment(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	log.Infof("Leave createDepartment-Handler")
 }
 
 func getDepartment(r *http.Request) (*model.Department, error) {
-	log.Infof("Entering getDepartment-Handler")
 	var department model.Department
-	//ToDo: loh http body ad middleware
 	err := json.NewDecoder(r.Body).Decode(&department)
 	if err != nil {
 		log.Errorf("Can't serialize request body to department struct: %v", err)
 		return nil, err
 	}
-	log.Infof("Leaving getDepartment-Handler")
 	return &department, nil
 }
 
 func GetDepartments(w http.ResponseWriter, _ *http.Request) {
-	log.Printf("Entering GetDepartments Handler")
 	departments, err := service.GetDepartments()
 	if err != nil {
 		log.Errorf("Error calling service GetDepartments: %v", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(departments); err != nil {
-		log.Errorf("Failure encoding value to JSON: %v", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	log.Printf("Leaving GetDepartments Handler")
 	utils.SendJson(w, departments)
 }
 

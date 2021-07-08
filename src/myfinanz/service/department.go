@@ -17,7 +17,7 @@ func CreateDepartment(department *model.Department) error {
 func GetDepartments() ([]model.Department, error) {
 	departments, err := client.GetDepartmentsFromDB()
 	if err != nil {
-		log.Fatalf("No Documents was found after calling GetDepartments: %v", err)
+		log.Printf("No Documents was found after calling GetDepartments: %v", err)
 	}
 	return departments, nil
 }

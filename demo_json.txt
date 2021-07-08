@@ -1,0 +1,87 @@
+// Create Club
+{
+  "schema_version": "1",
+  "club_name": "TSV Germania Hackentrick",
+  "club_leader": "Karl-Heinz Rummenigge",
+  "budget": 20000000,
+  "address": "Hardtstraße 37, 76185 Karlsruhe",
+  "description": "Der regionale Club mit vielen Möglichkeiten und einer tollen Atmosphäre. Insights you can play on.",
+  "bank_account":
+    {
+      "schema_version": "1",
+      "bank_account_id": 1,
+      "owner_name": "Karl-Heinz Rummenigge",
+      "name_of_bank": "Bank xyz",
+      "iban": "DE123456765432345678"
+    },
+  "departments_id": []
+}
+-----------------------------------------------
+// Create Department x2
+{
+  "schema_version": "1",
+  "name_of_department": "Handball",
+  "department_leader": "Heiner Brandt",
+  "department_budget": 5000000,
+  "department_cost":4880000,
+  "teams_id": []
+}
+-----------------------------------------------
+{
+  "schema_version": "1",
+  "name_of_department": "Fußball",
+  "department_leader": "Hansi Flick",
+  "department_budget": 10000000,
+  "department_cost": 1,
+  "teams_id": []
+}
+
+-----------------------------------------------
+// Update Club with Department ID
+// Get Department
+// Get Club
+
+// Create Team x1
+{
+  "schema_version": "1",
+  "name_of_team": "Rhein-Neckar Löwen 1",
+  "team_leader": "Markus Strobel",
+  "team_budget": 2550000,
+  "overall_costs": 1000
+}
+-----------------------------------------------
+// Create Team to department
+{
+  "schema_version": "1",
+  "name_of_team": "Rhein-Neckar Löwen 2",
+  "team_leader": "Martin Schwalb",
+  "team_budget": 1550000,
+  "overall_costs": 1000
+}
+-----------------------------------------------
+// Add Human Resource
+{
+  "schema_version": "1",
+  "name": "Kai Havertz",
+  "value": 9000000,
+  "salary": 5000000,
+  "contract_runtime": "2 years",
+  "team_id": ""
+}
+-----------------------------------------------
+// Add Non Human Resource
+{
+  "schema_version": "1",
+  "name": "Lizenzgebühr 1. Liga",
+  "cost": 1500000,
+  "validity": "Gültig bis 2022",
+  "duration": "2 years",
+  "team_id": ""
+}
+-----------------------------------------------
+
+-----------------------------------------------
+// Get Team Cost with ID
+-----------------------------------------------
+// Delete Department
+-----------------------------------------------

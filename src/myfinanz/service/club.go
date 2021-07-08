@@ -25,7 +25,7 @@ func GetClubs() ([]model.Club, error) {
 func GetClub(id primitive.ObjectID) (model.Club, error) {
 	club, err := client.GetClubWithIDFromDB(id)
 	if err != nil {
-		log.Printf("Service: Document with ID %v not found! LOG: %v", id, err)
+		log.Fatalf("Service: Document with ID %v not found! LOG: %v", id, err)
 	}
 	return club, nil
 }

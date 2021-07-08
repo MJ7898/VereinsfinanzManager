@@ -11,7 +11,6 @@ import (
 )
 
 func CreateTeam(w http.ResponseWriter, r *http.Request) {
-	log.Infof("Entering createTeam-Handler")
 	team, err := getTeam(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -22,18 +21,15 @@ func CreateTeam(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	log.Infof("Leave createTeam-Handler")
 }
 
 func getTeam(r *http.Request) (*model.Team, error) {
-	log.Infof("Entering getDepartment-Handler")
 	var team model.Team
 	err := json.NewDecoder(r.Body).Decode(&team)
 	if err != nil {
 		log.Errorf("Can't serialize request body to team struct: %v", err)
 		return nil, err
 	}
-	log.Infof("Leaving getTeam-Handler")
 	return &team, nil
 }
 
@@ -44,11 +40,7 @@ func GetTeams(w http.ResponseWriter, _ *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(teams); err != nil {
-		log.Errorf("Failure encoding value to JSON: %v", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
+	log.Printf("Handler: Return the Result of GET: %v", teams)
 	utils.SendJson(w, teams)
 }
 
@@ -60,7 +52,6 @@ func GetTeam(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
 	team, _ := service.GetTeam(id)
 	utils.SendJson(w, team)
 }
@@ -77,7 +68,7 @@ func UpdateTeam(w http.ResponseWriter, r *http.Request) {
 	}
 	team, err = service.UpdateTeam(id, team)
 	if err != nil {
-		log.Errorf("Failure updateing team with ID %v: %v", id, err)
+		log.Errorf("Failure updating team with ID %v: %v", id, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -94,7 +85,6 @@ func DeleteTeam(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
 	team, err := service.DeleteTeam(id)
 
 	if err != nil {
@@ -120,6 +110,5 @@ func TeamCost (w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
 	utils.SendJson(w, cost)
 }

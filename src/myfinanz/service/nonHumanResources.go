@@ -16,7 +16,7 @@ func CreateNHR(nhr *model.NonHumanResources) error  {
 func GetNHRS() ([]model.NonHumanResources, error)  {
 	nhrs, err := client.GetNHRsFromDB()
 	if err != nil {
-		log.Fatalf("No Documents was found after calling GetNHRSs: %v", err)
+		log.Print("No Documents was found after calling GetNHRSs: %v", err)
 	}
 	return nhrs, nil
 }

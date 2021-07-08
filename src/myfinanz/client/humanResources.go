@@ -12,9 +12,7 @@ import (
 
 func CreateHRDB(hr model.HumanResources) error {
 	client, err := mongoDB.GetMongoClient()
-	//client, ctx, err := GetMongoDBConnection()
 	log.Infof("Error during getMongoClient: %v was thrown", err)
-	//log.Infof("Error: %v was thrown", ctx)
 	res, err := client.Database("VfM").Collection("HR").InsertOne(context.TODO(), hr)
 	if err != nil {
 		log.Infof("Error during insertOne: %v was thrown", err)
@@ -30,21 +28,16 @@ func CreateHRDB(hr model.HumanResources) error {
 // GetHRWithIDFromDB  GetIssuesByCode - Get All issues for collection
 func GetHRWithIDFromDB(id primitive.ObjectID) (model.HumanResources, error)  {
 	result := model.HumanResources{}
-	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
-	//Get MongoDB connection using connectionhelper.
 	client, err := mongoDB.GetMongoClient()
 	if err != nil {
 		return result, err
 	}
-	//Create a handle to the respective collection in the database.
 	collection := client.Database("VfM").Collection("HR")
-	//Perform FindOne operation & validate against the error.
 	err = collection.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
 		return result, err
 	}
-	//Return result without any error.
 	return result, nil
 }
 
@@ -77,7 +70,6 @@ func GetHRsFromDB() ([]model.HumanResources, error) {
 
 func DeleteHRDB(id primitive.ObjectID,) (model.HumanResources, error) {
 	result := model.HumanResources{}
-	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 
 	client, err := mongoDB.GetMongoClient()
@@ -98,15 +90,11 @@ func DeleteHRDB(id primitive.ObjectID,) (model.HumanResources, error) {
 
 func UpdateHRDBWithTeamDependency(hr *model.HumanResources, teamID primitive.ObjectID) (*model.HumanResources, error) {
 	hr.TeamID = teamID
-
-	//Get MongoDB connection using connectionhelper.
 	client, err := mongoDB.GetMongoClient()
 	if err != nil {
 		return hr, err
 	}
-	//Create a handle to the respective collection in the database.
 	collection := client.Database("VfM").Collection("HR")
-	//Perform FindOne operation & validate against the error.
 	createHR, err := collection.InsertOne(context.TODO(), hr)
 	log.Printf("Successfully insterte Human Resourse: %v", createHR)
 

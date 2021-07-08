@@ -16,7 +16,7 @@ func CreateHR(hr *model.HumanResources) error  {
 func GetHRS() ([]model.HumanResources, error)  {
 	hrs, err := client.GetHRsFromDB()
 	if err != nil {
-		log.Fatalf("No Documents was found after calling GetTeams: %v", err)
+		log.Printf("No Documents was found after calling GetTeams: %v", err)
 	}
 	return hrs, nil
 }

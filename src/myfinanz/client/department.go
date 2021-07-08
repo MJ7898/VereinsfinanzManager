@@ -18,10 +18,8 @@ import (
 Initialized and exposed through  GetMongoClient().*/
 var clientInstance *mongo.Client
 
-//Used during creation of singleton client object in GetMongoClient().
 var clientInstanceError error
 
-//Used to execute client creation procedure only once.
 var mongoOnce sync.Once
 
 func CreateDepartmentDB(department model.Department) error {
@@ -44,26 +42,20 @@ func CreateDepartmentDB(department model.Department) error {
 // GetDepratmentWithIDFromDB  GetIssuesByCode - Get All issues for collection
 func GetDepratmentWithIDFromDB(id primitive.ObjectID) (model.Department, error) {
 	result := model.Department{}
-	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
-	//Get MongoDB connection using connectionhelper.
 	client, err := mongoDB.GetMongoClient()
 	if err != nil {
 		return result, err
 	}
-	//Create a handle to the respective collection in the database.
 	collection := client.Database("VfM").Collection("Department")
-	//Perform FindOne operation & validate against the error.
 	err = collection.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
 		return result, err
 	}
-	//Return result without any error.
 	return result, nil
 }
 
 func GetDepartmentsFromDB() ([]model.Department, error) {
-	log.Printf("Entering GetDepartments Client")
 	var getResult []model.Department
 	client, err := mongoDB.GetMongoClient()
 	if err != nil {
@@ -87,16 +79,13 @@ func GetDepartmentsFromDB() ([]model.Department, error) {
 	if len(getResult) == 0 {
 		return getResult, mongo.ErrNoDocuments
 	}
-	log.Printf("Leaving GetDepartments Client")
 	return getResult, nil
 }
 
 func UpdateDepartmentFromDB(id primitive.ObjectID, department *model.Department) (model.Department, error) {
 	result := model.Department{}
 
-	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
-	//Define updater for to specifiy change to be updated.
 	updater := bson.D{primitive.E{Key: "$set", Value: bson.M{
 		"schema_version":     department.SchemaVersion,
 		"name_of_department": department.NameOfDepartment,
@@ -112,9 +101,7 @@ func UpdateDepartmentFromDB(id primitive.ObjectID, department *model.Department)
 	if err != nil {
 		return result, err
 	}
-	//Create a handle to the respective collection in the database.
 	collection := client.Database("VfM").Collection("Department")
-	//Perform FindOne operation & validate against the error.
 	err = collection.FindOne(context.TODO(), filter).Decode(&result)
 
 	if err != nil {
@@ -126,13 +113,11 @@ func UpdateDepartmentFromDB(id primitive.ObjectID, department *model.Department)
 	if err != nil {
 		return result, nil
 	}
-	//Return result without any error.
 	return model.Department{}, nil
 }
 
 func DeleteDepartmentDB(id primitive.ObjectID) (model.Department, error) {
 	result := model.Department{}
-	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 
 	client, errCon := mongoDB.GetMongoClient()
@@ -147,13 +132,11 @@ func DeleteDepartmentDB(id primitive.ObjectID) (model.Department, error) {
 	}
 	entry := log.WithField("ID", result)
 	entry.Infof("Successfully deleted department: %v With ID: %v", result, id)
-	log.Printf("Successfully deleted Department")
+	log.Infof("Successfully deleted Department")
 	return result, nil
 }
 
 func UpdateCosts(insertedTeam *mongo.InsertOneResult, team *model.Team, departmentID primitive.ObjectID) error {
-	log.Infof("ENTERING UpdateDepartment-Client")
-
 	result, err := GetDepratmentWithIDFromDB(departmentID)
 	if err != nil {
 		return err
@@ -183,9 +166,7 @@ func UpdateCosts(insertedTeam *mongo.InsertOneResult, team *model.Team, departme
 	if err != nil {
 		return err
 	}
-	//Create a handle to the respective collection in the database.
 	collection := client.Database("VfM").Collection("Department")
-	//Perform UpdateOne operation & validate against the error.
 	filterClub := bson.D{primitive.E{Key: "_id", Value: result.ID}}
 	updatedClub, err := collection.UpdateOne(context.TODO(), filterClub, updater)
 	log.Printf("Updated Document as follow: %v", updatedClub)
@@ -193,7 +174,5 @@ func UpdateCosts(insertedTeam *mongo.InsertOneResult, team *model.Team, departme
 	if err != nil {
 		return err
 	}
-	//Return result without any error.
-	log.Infof("Leaving UpdateDepartment-Client")
 	return nil
 }

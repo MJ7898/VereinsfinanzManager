@@ -15,12 +15,11 @@ import (
 
 func CreateClubDB(club model.Club) error {
 	client, err := mongoDB.GetMongoClient()
-	log.Infof("Client: Error during getMongoClient: %v was thrown", err)
-	//log.Infof("Error: %v was thrown", ctx)
+	log.Fatalf("Client: Error during getMongoClient: %v was thrown", err)
 	res, err := client.Database("VfM").Collection("Club").InsertOne(context.TODO(), club)
 	if err != nil {
-		log.Infof("Client: Error during insertOne: %v was thrown", err)
-		log.Infof("Client: Connection isn`t up %v", res)
+		log.Fatalf("Client: Error during insertOne: %v was thrown", err)
+		log.Fatalf("Client: Connection isn`t up %v", res)
 		return err
 	}
 	entry := log.WithField("ID", club)
@@ -33,21 +32,17 @@ func CreateClubDB(club model.Club) error {
 // GetClubWithIDFromDB  GetIssuesByCode - Get All issues for collection
 func GetClubWithIDFromDB(id primitive.ObjectID) (model.Club, error) {
 	result := model.Club{}
-	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
-	//Get MongoDB connection using connectionhelper.
 	client, err := mongoDB.GetMongoClient()
 	if err != nil {
 		return result, err
 	}
-	//Create a handle to the respective collection in the database.
+
 	collection := client.Database("VfM").Collection("Club")
-	//Perform FindOne operation & validate against the error.
 	err = collection.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
 		return result, err
 	}
-	//Return result without any error.
 	return result, nil
 }
 
@@ -79,10 +74,8 @@ func GetClubsFromDB() ([]model.Club, error) {
 }
 
 func UpdateClubFromDB(id primitive.ObjectID, club *model.Club) (model.Club, error) {
-	log.Infof("ENTERING UpdateClub-Client")
 	result := model.Club{}
 
-	//Adding new Departments via append old slice
 	oldDepartments, _ := GetClubWithIDFromDB(id)
 	newDepartments := oldDepartments.Departments
 	newDepartments = append(newDepartments, club.Departments...)
@@ -94,10 +87,7 @@ func UpdateClubFromDB(id primitive.ObjectID, club *model.Club) (model.Club, erro
 		NameOfBank:    club.BankAccount.NameOfBank,
 		Iban:          club.BankAccount.Iban,
 	}
-	log.Infof("Used BankAccount: %v", bankAccount)
-	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
-	//Define updater for to specifiy change to be updated.
 	updater := bson.D{primitive.E{Key: "$set", Value: bson.M{
 		"schema_version": club.SchemaVersion,
 		"club_name":      club.ClubName,
@@ -111,15 +101,12 @@ func UpdateClubFromDB(id primitive.ObjectID, club *model.Club) (model.Club, erro
 
 	log.Printf("Result from UPDATER: %v", updater)
 
-	//Get MongoDB connection using connectionhelper.
 	client, err := mongoDB.GetMongoClient()
 	if err != nil {
 		return result, err
 	}
-	//Create a handle to the respective collection in the database.
 	collection := client.Database("VfM").Collection("Club")
 
-	//Perform FindOne operation & validate against the error.
 	err = collection.FindOne(context.TODO(), filter).Decode(&result)
 
 	if err != nil {
@@ -131,8 +118,7 @@ func UpdateClubFromDB(id primitive.ObjectID, club *model.Club) (model.Club, erro
 	if err != nil {
 		return result, nil
 	}
-	//Return result without any error.
-	log.Infof("Leaving UpdateClub-Client")
+
 	return model.Club{}, nil
 }
 
@@ -171,14 +157,12 @@ func UpdateClubFromDBRemove(id primitive.ObjectID) (model.Club, error) {
 	if err != nil {
 		return result, nil
 	}
-	//Return result without any error.
 	log.Infof("Leaving UpdateClub-Client")
 	return model.Club{}, nil
 }
 
 func DeleteClubDB(id primitive.ObjectID) (model.Club, error) {
 	result := model.Club{}
-	//Define filter query for fetching specific document from collection
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 
 	client, errCon := mongoDB.GetMongoClient()

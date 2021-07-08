@@ -18,15 +18,16 @@ func CreateTeam(team *model.Team) (*mongo.InsertOneResult, error) {
 func GetTeams() ([]model.Team, error) {
 	teams, err := client.GetTeamsFromDB()
 	if err != nil {
-		log.Fatalf("No Documents was found after calling GetTeams: %v", err)
+		log.Printf("No Documents was found after calling GetTeams: %v", err)
 	}
+	log.Printf("Service: Return the Result of GET: %v", teams)
 	return teams, nil
 }
 
 func GetTeam(id primitive.ObjectID) (model.Team, error) {
 	team, err := client.GetTeamWithIDFromDB(id)
 	if err != nil {
-		log.Printf("Document with ID %V not found! LOG: %v", id, err)
+		log.Errorf("Document with ID %V not found! LOG: %v", id, err)
 	}
 	return team, nil
 }
@@ -40,7 +41,7 @@ func UpdateTeam(id primitive.ObjectID, team *model.Team) (*model.Team, error) {
 func DeleteTeam(id primitive.ObjectID) (*model.Team, error) {
 	deleteTeamResult, err := client.DeleteTeamDB(id)
 	if err != nil {
-		log.Fatalf("Error %v was thorwn", err)
+		log.Errorf("Error %v was thorwn", err)
 	}
 	log.Printf("Successfully deleted team %v from DB", deleteTeamResult)
 	return nil, nil
@@ -48,7 +49,7 @@ func DeleteTeam(id primitive.ObjectID) (*model.Team, error) {
 func GetResourceCost(id primitive.ObjectID) ([]bson.M, error) {
 	teamCost, err := client.TeamCosts(id)
 	if err != nil {
-		log.Fatalf("Error %v was thorwn", err)
+		log.Errorf("Error %v was thorwn", err)
 	}
 	log.Printf("Successfully get costs from team %v from DB", teamCost)
 	return teamCost, nil

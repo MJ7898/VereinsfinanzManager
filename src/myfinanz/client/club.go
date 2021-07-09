@@ -15,10 +15,9 @@ import (
 
 func CreateClubDB(club model.Club) error {
 	client, err := mongoDB.GetMongoClient()
-	log.Fatalf("Client: Error during getMongoClient: %v was thrown", err)
 	res, err := client.Database("VfM").Collection("Club").InsertOne(context.TODO(), club)
 	if err != nil {
-		log.Fatalf("Client: Error during insertOne: %v was thrown", err)
+		log.Printf("Client: Error during insertOne: %v was thrown", err)
 		log.Fatalf("Client: Connection isn`t up %v", res)
 		return err
 	}

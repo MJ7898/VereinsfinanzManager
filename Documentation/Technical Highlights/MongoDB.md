@@ -10,5 +10,3 @@ Im Wesentlichen handelt es sich dabei um die Pattern:
 	2. Das Computed Pattern dient der Performanzsteigerung und baut auf dem Gedanken des Frontloading auf. Werden von angeschlossenen Servicen häufig die gleichen Daten angefragt, die zur Bearbeitung der Abfrage manipuliert werden (bspw. Aggregation von gleichartigen Daten), können diese Manipulationne als eigenständige Datenfelder im Dokument gespeichert werden. So kann bspw. die durchschnittliche Bewertung eines Filmes als eigenständiges Datenfeld im Film-Dokument gespeichert und aktualisiert werden.
 	3. Model-Relationships. Der VereinsFinanzManager setzt die 1-zu-1-Relation mit eingebetten Dokumenten um, sodass vereinfachte Abfragen und effiziente Zugriffe ermöglicht werden. Zudem verhindert die Umsetzung des 1-zu-N-Relationen mit Dokumentenreferenz-Pattern das redundante Speichern von Dokumenten.
 Die spezifische Umsetzung der hier genannten Pattern sind sowohl der beiliegenden Präsentation (Pfad "Presentation") und dem Source-Code zu entnehmen.
-
-#TODO
